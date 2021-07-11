@@ -1,0 +1,29 @@
+- arguments:
+  - "-XConstraintKinds"
+  - "-XDeriveGeneric"
+  - "-XGeneralizedNewtypeDeriving"
+  - "-XLambdaCase"
+  - "-XOverloadedStrings"
+  - "-XRecordWildCards"
+  - "-XScopedTypeVariables"
+  - "-XStandaloneDeriving"
+  - "-XTupleSections"
+  - "-XTypeApplications"
+  - "-XViewPatterns"
+- ignore:
+    name: Avoid lambda
+- ignore:
+    name: Use uncurry
+- ignore:
+    name: Use newtype instead of data
+- ignore:
+    name: Use head
+- ignore:
+    name: Use Foldable.forM_
+- ignore:
+    name: "Eta reduce"
+- ignore:
+    name: "Avoid lambda"
+    lhs: "return ()"
+    note: "Use 'pure ()'"
+    rhs: pass

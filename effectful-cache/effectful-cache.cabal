@@ -1,0 +1,81 @@
+cabal-version:    3.0
+name:             effectful-cache
+version:          0.0.1.0
+homepage:         https://github.com/Kleidukos/effectful-cache#readme
+bug-reports:      https://github.com/Kleidukos/effectful-cache/issues
+author:           Hécate Moonlight
+maintainer:       Hécate Moonlight
+license:          MIT
+build-type:       Simple
+extra-source-files:
+    CHANGELOG.md
+    LICENSE.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common common-extensions
+  default-extensions: ConstraintKinds
+                      DataKinds
+                      FlexibleContexts
+                      FlexibleInstances
+                      GADTs
+                      KindSignatures
+                      ScopedTypeVariables
+                      TypeApplications
+                      TypeOperators
+  default-language: Haskell2010
+
+common common-ghc-options
+  ghc-options: -Wall
+               -Wcompat
+               -Werror
+               -Widentities
+               -Wincomplete-record-updates
+               -Wincomplete-uni-patterns
+               -Wpartial-fields
+               -Wredundant-constraints
+               -fhide-source-paths
+               -Wno-unused-do-bind
+               -fwrite-ide-info
+               -hiedir=.hie
+               -haddock
+               -j
+
+common common-rts-options
+  ghc-options: -rtsopts
+               -threaded
+               -with-rtsopts=-N
+
+library
+  import: common-extensions
+  import: common-ghc-options
+  hs-source-dirs:
+    src
+  exposed-modules:
+    Data.Cache.Effect
+  build-depends:
+    base <= 4.17,
+    cache,
+    hashable,
+    effectful
+
+test-suite effectful-cache-test
+  import: common-extensions
+  import: common-ghc-options
+  import: common-rts-options
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+    Utils
+  hs-source-dirs:
+      test
+  build-depends:
+    , base
+    , effectful-cache
+    , effectful
+    , cache
+    , hashable
+    , hspec
