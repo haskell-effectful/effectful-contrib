@@ -32,6 +32,9 @@ import Effectful
 import Prelude hiding (lookup)
 
 -- | Operations on a cache
+-- Since it is an effect with type variables, you will have the duty of making unambiguous calls to the provided
+-- functions. This means that with numerical literals ('3', '4', etc), visible type applications will be necessary.
+-- See each function's documentation for examples.
 data Cache k v :: Effect where
   Insert :: (Eq k, Hashable k) => k -> v -> Cache k v m ()
   Lookup :: (Eq k, Hashable k) => k -> Cache k v m (Maybe v)
@@ -76,8 +79,8 @@ lookup key = send $ Lookup key
 
 -- | List all the keys of the cache.
 --
--- You will need to specify what are the types of the key & value parameters since
--- we are in complex type-level wizardry around those parts.
+-- Since 'Cache' has type variables, you will need to use visible type applications or explicitly typed
+-- arguments for the key *and* value parameters to distinguish this 'Cache' from potentially other ones.
 --
 -- === __Example__
 --
@@ -91,8 +94,8 @@ keys = send @(Cache k v) Keys
 
 -- | Delete the provided key from the cache it is present.
 --
--- You will need to specify what are the types of the key & value parameters since
--- we are in complex type-level wizardry around those parts.
+-- Since 'Cache' has type variables, you will need to use visible type applications or explicitly typed
+-- arguments for the key *and* value parameters to distinguish this 'Cache' from potentially other ones.
 --
 -- === __Example__
 --
@@ -110,8 +113,9 @@ delete key = send @(Cache k v) $ Delete key
 -- | Keeps elements that satisfy the predicate (used for cache invalidation).
 --
 -- Note that the predicate might be called for expired items.
--- You will need to specify what are the types of the key & value parameters since
--- we are in complex type-level wizardry around those parts.
+--
+-- Since 'Cache' has type variables, you will need to use visible type applications or explicitly typed
+-- arguments for the key *and* value parameters to distinguish this 'Cache' from potentially other ones.
 --
 -- === __Example__
 --
