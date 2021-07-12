@@ -22,7 +22,7 @@ spec = do
 ---
 
 testIOTimeAndState :: UTCTime -> Expectation
-testIOTimeAndState firstTime = runIOE $ do
+testIOTimeAndState firstTime = runEff $ do
   traceShowM firstTime
   result <- evalState firstTime -- The order in which thes two functions
             . runCurrentTimeIO  -- are composed does not matter. Swap them to try.
@@ -45,7 +45,7 @@ action = do
 ---
 
 testPureTimeAndState :: Expectation
-testPureTimeAndState = runIOE $ do
+testPureTimeAndState = runEff $ do
   let time = read "2021-07-11 13:30:20 UTC" :: UTCTime
   result <- runCurrentTimePure time
             . evalState time

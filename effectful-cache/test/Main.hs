@@ -33,7 +33,7 @@ spec = do
 ---
 
 testInsertAndLookup :: C.Cache Int Int -> Expectation
-testInsertAndLookup cache = runIOE $ do
+testInsertAndLookup cache = runEff $ do
   result <- runCacheIO cache insertAndLookup
   result `U.shouldBe` Just 12
 
@@ -43,7 +43,7 @@ insertAndLookup = do
   lookup @Int 3
 
 testListKeys :: C.Cache Int Int -> Expectation
-testListKeys cache = runIOE $ do
+testListKeys cache = runEff $ do
   result <- runCacheIO cache listKeys
   result `U.shouldBe` [2,3,4,5]
 
@@ -53,7 +53,7 @@ listKeys = do
   keys @Int @Int
 
 testDeleteKeys :: C.Cache Int Int -> Expectation
-testDeleteKeys cache = runIOE $ do
+testDeleteKeys cache = runEff $ do
   result <- runCacheIO cache deleteKeys
   result `U.shouldBe` [2,4]
 
@@ -65,7 +65,7 @@ deleteKeys = do
   keys @Int @Int
 
 testFilterWithKey :: C.Cache Int Int -> Expectation
-testFilterWithKey cache = runIOE $ do
+testFilterWithKey cache = runEff $ do
   result <- runCacheIO cache filterKeys
   result `U.shouldBe` [2,4,5]
 
