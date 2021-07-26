@@ -72,7 +72,7 @@ library
   build-depends:
     base <= 4.17,
     time,
-    effectful
+    effectful-core
 
 test-suite effectful-time-test
   import: common-extensions
@@ -87,6 +87,6 @@ test-suite effectful-time-test
   build-depends:
     , base
     , effectful-time
-    , effectful
+    , effectful-core
     , time
     , hspec

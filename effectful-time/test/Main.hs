@@ -4,7 +4,7 @@ import Data.Time (UTCTime)
 import qualified Data.Time as T
 import Debug.Trace
 import Effectful.Monad
-import Effectful.State
+import Effectful.State.Local
 import Test.Hspec as H
 import qualified Utils as U
 

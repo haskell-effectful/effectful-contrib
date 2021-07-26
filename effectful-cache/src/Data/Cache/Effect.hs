@@ -25,11 +25,12 @@ module Data.Cache.Effect
   ) where
 
 import Control.Monad.IO.Class
-import qualified Data.Cache as C
 import Data.Hashable
 import Data.Kind
-import Effectful
+import Effectful.Handler
+import Effectful.Monad
 import Prelude hiding (lookup)
+import qualified Data.Cache as C
 
 -- | Operations on a cache
 -- Since it is an effect with type variables, you will have the duty of making unambiguous calls to the provided
@@ -48,7 +49,7 @@ runCacheIO :: forall (k :: Type) (v :: Type) (es :: [Effect]) (a :: Type)
            => C.Cache k v
            -> Eff (Cache k v : es) a
            -> Eff es a
-runCacheIO cache = interpret $ \case
+runCacheIO cache = interpret $ \_ -> \case
   Insert key value  -> liftIO $ C.insert cache key value
   Lookup key        -> liftIO $ C.lookup cache key
   Keys              -> liftIO $ C.keys cache

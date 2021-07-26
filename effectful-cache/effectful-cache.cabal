@@ -60,7 +60,7 @@ library
     base <= 4.17,
     cache,
     hashable,
-    effectful
+    effectful-core
 
 test-suite effectful-cache-test
   import: common-extensions
@@ -75,7 +75,7 @@ test-suite effectful-cache-test
   build-depends:
     , base
     , effectful-cache
-    , effectful
+    , effectful-core
     , cache
     , hashable
     , hspec

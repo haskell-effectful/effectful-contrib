@@ -13,9 +13,9 @@ module Data.Time.Effect where
 import Control.Monad.IO.Class
 import Data.Kind
 import Data.Time (UTCTime)
-import qualified Data.Time as T
-import Effectful.Interpreter
+import Effectful.Handler
 import Effectful.Monad
+import qualified Data.Time as T
 
 -- | An effect for getting the current time
 data Time :: Effect where
@@ -29,9 +29,9 @@ getCurrentTime = send CurrentTime
 -- | The default IO handler
 runCurrentTimeIO :: forall (es :: [Effect]) (a :: Type)
                   . IOE :> es => Eff (Time : es) a -> Eff es a
-runCurrentTimeIO = interpret $ \CurrentTime -> liftIO T.getCurrentTime
+runCurrentTimeIO = interpret $ \_ CurrentTime -> liftIO T.getCurrentTime
 
 -- | The pure handler, with a static value
 runCurrentTimePure :: forall (es :: [Effect]) (a :: Type)
                     . UTCTime -> Eff (Time : es) a -> Eff es a
-runCurrentTimePure time = interpret $ \CurrentTime -> pure time
+runCurrentTimePure time = interpret $ \_ CurrentTime -> pure time

@@ -1,7 +1,7 @@
 module Utils where
 
 import Control.Monad.IO.Class
-import Effectful
+import Effectful.Monad
 import GHC.Stack
 import qualified Test.Hspec as H
 
