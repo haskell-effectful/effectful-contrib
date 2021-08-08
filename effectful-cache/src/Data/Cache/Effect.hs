@@ -56,13 +56,6 @@ runCacheIO cache = interpret $ \_ -> \case
   Delete key        -> liftIO $ C.delete cache key
   FilterWithKey fun -> liftIO $ C.filterWithKey fun cache
 
--- runCacheSTM :: (Eq k, Hashable k)
---             => C.Cache k v
---             -> Eff (Cache k v : es) a
---             -> Eff es a
--- runCurrentTimePure :: UTCTime -> Eff (Time : es) a -> Eff es a
--- runCurrentTimePure time = interpret $ \CurrentTime -> pure time
-
 -- | Insert an item in the cache, using the default expiration value of the cache.
 insert :: forall (k :: Type) (v :: Type) (es :: [Effect])
         . (Eq k, Hashable k, Cache k v :> es)
