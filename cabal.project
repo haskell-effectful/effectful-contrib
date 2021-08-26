@@ -1,5 +1,6 @@
-packages: ./effectful-time
-          ./effectful-cache
+packages: ./effectful-cache
+          ./effectful-time
+          ./effectful-typed-process
 
 with-compiler: ghc-8.10
 
