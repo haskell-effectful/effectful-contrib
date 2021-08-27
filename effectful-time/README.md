@@ -6,27 +6,34 @@ A `Time` effect for the [`effectful`][effectful] ecosystem.
 
 ## How to use
 
-This library exposes these elements:
+This library exposes the following elements:
 
 * `Time` — The type-level effect that you can declare in your type signatures.
 
 ```haskell
-storingTimeInState :: (Time :> es, State UTCTime :> es) => Eff es UTCTime
+processTime :: (Time :> es) => Eff es UTCTime
 ```
 
 * `getCurrentTime` — The function that you will call to get a `Eff es UTCTime`.
 
 ```haskell
-action :: (Time :> es) => Eff es UTCTime
-action = do
-  t <- getCurrentTime -- from Data.Time.Effect
-  pure $ T.addUTCTime 100 t -- from Data.Time.Clock, qualified with `T.`
+import Data.Time (UTCTime)
+import qualified Data.Time as T
+
+import Data.Time.Effect (getCurrentTime)
+
+usingTime :: (Time :> es) => Eff es UTCTime
+usingTime = do
+  t <- getCurrentTime
+  pure $ T.addUTCTime 100 t
 ```
 
 * Runners for IO & Pure environments:
 
 ```Haskell
-
+runCurrentTimeIO usingTime
+-- or
+runCurrentTimePure (time :: UTCTime) usingTime
 ```
 
 See the [tests][tests] to see an example use.
