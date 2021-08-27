@@ -6,5 +6,5 @@ with-compiler: ghc-8.10
 source-repository-package
   type: git
   location: https://github.com/arybczak/effectful.git
-  tag: 50cdcbf9e0d561141da694c75f0f23cb5ec801a1
+  tag: 7527aa4440ea22fe4bf14e44fa25a291c23ec46a
   subdir: effectful-core
