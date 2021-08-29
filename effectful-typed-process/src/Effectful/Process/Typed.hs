@@ -14,12 +14,12 @@ module Effectful.Process.Typed
   , readProcess_
   , runProcess
   , runProcess_
-  , runProcessStdout
-  , runProcessStdout_
-  , runProcessStderr
-  , runProcessStderr_
-  , runProcessInterleaved
-  , runProcessInterleaved_
+  , readProcessStdout
+  , readProcessStdout_
+  , readProcessStderr
+  , readProcessStderr_
+  , readProcessInterleaved
+  , readProcessInterleaved_
 
   -- * Process exit code
   , waitExitCode
@@ -106,41 +106,41 @@ runProcess_ :: TypedProcess :> es
             -> Eff es ()
 runProcess_ = unsafeEff_ . PT.runProcess_
 
--- | Lifted 'PT.runProcessStdout'.
-runProcessStdout :: TypedProcess :> es
+-- | Lifted 'PT.readProcessStdout'.
+readProcessStdout :: TypedProcess :> es
                  => PT.ProcessConfig stdin stdoutIgnored stderr
                  -> Eff es (ExitCode, ByteString)
-runProcessStdout = unsafeEff_ . PT.readProcessStdout
+readProcessStdout = unsafeEff_ . PT.readProcessStdout
 
--- | Lifted 'PT.runProcessStdout_'.
-runProcessStdout_ :: TypedProcess :> es
+-- | Lifted 'PT.readProcessStdout_'.
+readProcessStdout_ :: TypedProcess :> es
                   => PT.ProcessConfig stdin stdoutIgnored stderr
                   -> Eff es ByteString
-runProcessStdout_ = unsafeEff_ . PT.readProcessStdout_
+readProcessStdout_ = unsafeEff_ . PT.readProcessStdout_
 
--- | Lifted 'PT.runProcessStderr'.
-runProcessStderr :: TypedProcess :> es
+-- | Lifted 'PT.readProcessStderr'.
+readProcessStderr :: TypedProcess :> es
                  => PT.ProcessConfig stdin stdout stderrIgnored
                  -> Eff es (ExitCode, ByteString)
-runProcessStderr = unsafeEff_ . PT.readProcessStderr
+readProcessStderr = unsafeEff_ . PT.readProcessStderr
 
--- | Lifted 'PT.runProcessStderr_'.
-runProcessStderr_ :: TypedProcess :> es
+-- | Lifted 'PT.readProcessStderr_'.
+readProcessStderr_ :: TypedProcess :> es
                   => PT.ProcessConfig stdin stdout stderrIgnored
                   -> Eff es ByteString
-runProcessStderr_ = unsafeEff_ . PT.readProcessStderr_
+readProcessStderr_ = unsafeEff_ . PT.readProcessStderr_
 
--- | Lifted 'PT.runProcessInterleaved'.
-runProcessInterleaved :: TypedProcess :> es
+-- | Lifted 'PT.readProcessInterleaved'.
+readProcessInterleaved :: TypedProcess :> es
                       => PT.ProcessConfig stdin stdoutIgnored stderrIgnored
                       -> Eff es (ExitCode, ByteString)
-runProcessInterleaved = unsafeEff_ . PT.readProcessInterleaved
+readProcessInterleaved = unsafeEff_ . PT.readProcessInterleaved
 
--- | Lifted 'PT.runProcessInterleaved_'.
-runProcessInterleaved_ :: TypedProcess :> es
+-- | Lifted 'PT.readProcessInterleaved_'.
+readProcessInterleaved_ :: TypedProcess :> es
                        => PT.ProcessConfig stdin stdoutIgnored stderrIgnored
                        -> Eff es ByteString
-runProcessInterleaved_ = unsafeEff_ . PT.readProcessInterleaved_
+readProcessInterleaved_ = unsafeEff_ . PT.readProcessInterleaved_
 
 ----------------------------------------
 -- Process exit code
