@@ -115,7 +115,7 @@ runProcessInterleaved_ = unsafeEff_ . PT.readProcessInterleaved_
 waitExitCode :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es ExitCode
 waitExitCode = unsafeEff_ . PT.waitExitCode
 
--- | Lifted 'PT.waitExitCodeSTM'.
+---- | Lifted 'PT.waitExitCodeSTM'.
 --waitExitCodeSTM :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es ExitCode
 --waitExitCodeSTM = unsafeEff_ . PT.waitExitCode
 
@@ -123,7 +123,7 @@ waitExitCode = unsafeEff_ . PT.waitExitCode
 getExitCode :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es (Maybe ExitCode)
 getExitCode = unsafeEff_ . PT.getExitCode
 
--- | Lifted 'PT.getExitCodeSTM'.
+---- | Lifted 'PT.getExitCodeSTM'.
 --getExitCodeSTM :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es (Maybe ExitCode)
 --getExitCodeSTM = unsafeEff_ . PT.getExitCodeSTM
 
@@ -131,7 +131,7 @@ getExitCode = unsafeEff_ . PT.getExitCode
 checkExitCode :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es ()
 checkExitCode = unsafeEff_ . PT.checkExitCode
 
--- | Lifted 'PT.checkExitCodeSTM'.
+---- | Lifted 'PT.checkExitCodeSTM'.
 --checkExitCodeSTM :: TypedProcess :> es => PT.Process stdin stdout stderr -> Eff es ()
 --checkExitCodeSTM = unsafeEff_ . PT.checkExitCodeSTM
 
