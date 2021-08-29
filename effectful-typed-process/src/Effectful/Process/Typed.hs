@@ -217,5 +217,5 @@ liftWithProcess :: TypedProcess :> es
                 -> (PT.Process stdin stdout stderr -> Eff es a)
                 -> Eff es a
 liftWithProcess k pc f = unsafeEff $ \es ->
-  unsafeSeqUnliftEff es $ \runInIO ->
+  seqUnliftEff es $ \runInIO ->
     k pc (runInIO . f)
