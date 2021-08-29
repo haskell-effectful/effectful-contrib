@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-dodgy-imports #-}
+
 module Effectful.Process.Typed
   ( -- * Process effect
     TypedProcess
@@ -25,7 +27,32 @@ module Effectful.Process.Typed
   , waitExitCode
   , getExitCode
   , checkExitCode
+
+  -- * Re-exports from "System.Process.Typed"
+  , module Reexport
   ) where
+
+import System.Process.Typed as Reexport hiding
+  ( startProcess
+  , stopProcess
+  , withProcessWait
+  , withProcessWait_
+  , withProcessTerm
+  , withProcessTerm_
+  , readProcess
+  , readProcess_
+  , runProcess
+  , runProcess_
+  , readProcessStdout
+  , readProcessStdout_
+  , readProcessStderr
+  , readProcessStderr_
+  , readProcessInterleaved
+  , readProcessInterleaved_
+  , waitExitCode
+  , getExitCode
+  , checkExitCode
+  )
 
 import Data.ByteString.Lazy (ByteString)
 import System.Exit (ExitCode)
