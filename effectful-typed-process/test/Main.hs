@@ -1,59 +1,136 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
+
 module Main where
 
-import Data.Time (UTCTime)
-import qualified Data.Time as T
-import Debug.Trace
 import Effectful.Monad
-import Effectful.State.Local
+import Effectful.Temporary
+import System.Exit (ExitCode(..))
+import System.IO.Error (isDoesNotExistError)
 import Test.Hspec as H
-import qualified Utils as U
 
-import Data.Time.Effect
+import Effectful.Process.Typed
 
 main :: IO ()
 main = hspec spec
 
 spec :: Spec
 spec = do
-    describe "Combining State & Time" $ do
-      it "IO Time handler & State" $ testIOTimeAndState =<< T.getCurrentTime
-      it "Pure Time handler & State" testPureTimeAndState
+    describe "Simple" $ do
 
----
+      it "/bin/env true" $ do
+        let pc = proc "/bin/env" ["true"]
+            action = runEff . runTypedProcess $ do
+              p <- startProcess pc
+              waitExitCode p
+        action `shouldReturn` ExitSuccess
 
-testIOTimeAndState :: UTCTime -> Expectation
-testIOTimeAndState firstTime = runEff $ do
-  traceShowM firstTime
-  result <- evalState firstTime -- The order in which thes two functions
-            . runCurrentTimeIO  -- are composed does not matter. Swap them to try.
-            $ storingTimeInState
-  result `U.shouldBe` firstTime
+      it "Non-existent binary" $ do
+        let pc = proc "/bin/doesnotexist" []
+            action = runEff . runTypedProcess $ do
+              p <- startProcess pc
+              waitExitCode p
+        action `shouldThrow` isDoesNotExistError
 
-storingTimeInState :: (Time :> es, State UTCTime :> es) => Eff es UTCTime
-storingTimeInState = do
-  firstTime <- get
-  secondTime <- action
-  if secondTime <= firstTime
-  then put secondTime
-  else put firstTime
-  get
+      it "Continue process execution" $ do
+        let pc = shell "sleep 3"
+            action = runEff . runTypedProcess $ do
+              p <- startProcess pc
+              getExitCode p
+        action `shouldReturn` Nothing
 
-action :: (Time :> es) => Eff es UTCTime
-action = do
-  T.addUTCTime 100 <$> getCurrentTime
+    describe "Termination" $ do
 
----
+      it "Terminate process" $ do
+        let action = runEff . runTemporary . runTypedProcess $ do
+              withSystemTempFile "effectful-typed-process-test" $ \fp h -> do
+                let pc = setStdout (useHandleClose h)
+                       $ shell "sleep 1; printf 'Output'"
+                withProcessTerm pc (const $ pure ())
+                liftIO $ readFile fp
+        action `shouldReturn` ""
 
-testPureTimeAndState :: Expectation
-testPureTimeAndState = runEff $ do
-  let time = read "2021-07-11 13:30:20 UTC" :: UTCTime
-  result <- runCurrentTimePure time
-            . evalState time
-            $ usingStaticTime
-  result `U.shouldBe` True
+      it "Wait for process" $ do
+        let action = runEff . runTemporary . runTypedProcess $ do
+              withSystemTempFile "effectful-typed-process-test" $ \fp h -> do
+                let pc = setStdout (useHandleClose h)
+                       $ shell "sleep 1; printf 'Output'"
+                withProcessWait pc (const $ pure ())
+                liftIO $ readFile fp
+        action `shouldReturn` "Output"
 
-usingStaticTime :: (Time :> es, State UTCTime :> es) => Eff es Bool
-usingStaticTime = do
-  t <- getCurrentTime
-  t' <- get
-  pure $ t == t'
+    describe "Helper functions" $ do
+
+      it "runProcess" $ do
+        let pc = proc "/bin/env" ["true"]
+            action = runEff . runTypedProcess $ do
+              runProcess pc
+        action `shouldReturn` ExitSuccess
+
+      it "runProcess_" $ do
+        let pc = proc "/bin/env" ["true"]
+            action = runEff . runTypedProcess $ do
+              runProcess_ pc
+        action `shouldReturn` ()
+
+      it "readProcess" $ do
+        let pc = shell "printf 'stdout'; printf 'stderr' >&2"
+            action = runEff . runTypedProcess $ do
+              readProcess pc
+        action `shouldReturn` (ExitSuccess, "stdout", "stderr")
+
+      it "readProcess_" $ do
+        let pc = shell "printf 'stdout'; printf 'stderr' >&2"
+            action = runEff . runTypedProcess $ do
+              readProcess_ pc
+        action `shouldReturn` ("stdout", "stderr")
+
+      it "readProcessStdout" $ do
+        let pc = shell "printf 'Output'"
+            action = runEff . runTypedProcess $ do
+              readProcessStdout pc
+        action `shouldReturn` (ExitSuccess, "Output")
+
+      it "readProcessStdout_" $ do
+        let pc = shell "printf 'Output'"
+            action = runEff . runTypedProcess $ do
+              readProcessStdout_ pc
+        action `shouldReturn` "Output"
+
+      it "readProcessStderr" $ do
+        let pc = shell "printf 'Output' >&2"
+            action = runEff . runTypedProcess $ do
+              readProcessStderr pc
+        action `shouldReturn` (ExitSuccess, "Output")
+
+      it "readProcessStderr_" $ do
+        let pc = shell "printf 'Output' >&2"
+            action = runEff . runTypedProcess $ do
+              readProcessStderr_ pc
+        action `shouldReturn` "Output"
+
+    describe "Exit codes" $ do
+
+      it "runProcess_" $ do
+        let pc = proc "/bin/env" ["false"]
+            action = runEff . runTypedProcess $ do
+              runProcess_ pc
+        action `shouldThrow` const @_ @ExitCodeException True
+
+      it "readProcess_" $ do
+        let pc = proc "/bin/env" ["false"]
+            action = runEff . runTypedProcess $ do
+              readProcess_ pc
+        action `shouldThrow` const @_ @ExitCodeException True
+
+      it "readProcessStdout_" $ do
+        let pc = proc "/bin/env" ["false"]
+            action = runEff . runTypedProcess $ do
+              readProcessStdout_ pc
+        action `shouldThrow` const @_ @ExitCodeException True
+
+      it "readProcessStderr_" $ do
+        let pc = proc "/bin/env" ["false"]
+            action = runEff . runTypedProcess $ do
+              readProcessStderr_ pc
+        action `shouldThrow` const @_ @ExitCodeException True

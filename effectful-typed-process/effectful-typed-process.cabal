@@ -41,3 +41,19 @@ library
                   , bytestring
                   , typed-process
                   , effectful-core
+
+test-suite effectful-cache-test
+  import: language
+
+  ghc-options:    -rtsopts -threaded -with-rtsopts=-N
+
+  build-depends:    base
+                  , effectful
+                  , effectful-core
+                  , effectful-typed-process
+                  , hspec
+
+  hs-source-dirs: test
+
+  type:           exitcode-stdio-1.0
+  main-is:        Main.hs
