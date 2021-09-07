@@ -18,8 +18,8 @@ spec :: Spec
 spec = do
     describe "Simple" $ do
 
-      it "/bin/env true" $ do
-        let pc = proc "/bin/env" ["true"]
+      it "/usr/bin/env true" $ do
+        let pc = proc "/usr/bin/env" ["true"]
             action = runEff . runTypedProcess $ do
               p <- startProcess pc
               waitExitCode p
@@ -62,13 +62,13 @@ spec = do
     describe "Helper functions" $ do
 
       it "runProcess" $ do
-        let pc = proc "/bin/env" ["true"]
+        let pc = proc "/usr/bin/env" ["true"]
             action = runEff . runTypedProcess $ do
               runProcess pc
         action `shouldReturn` ExitSuccess
 
       it "runProcess_" $ do
-        let pc = proc "/bin/env" ["true"]
+        let pc = proc "/usr/bin/env" ["true"]
             action = runEff . runTypedProcess $ do
               runProcess_ pc
         action `shouldReturn` ()
@@ -112,25 +112,25 @@ spec = do
     describe "Exit codes" $ do
 
       it "runProcess_" $ do
-        let pc = proc "/bin/env" ["false"]
+        let pc = proc "/usr/bin/env" ["false"]
             action = runEff . runTypedProcess $ do
               runProcess_ pc
         action `shouldThrow` const @_ @ExitCodeException True
 
       it "readProcess_" $ do
-        let pc = proc "/bin/env" ["false"]
+        let pc = proc "/usr/bin/env" ["false"]
             action = runEff . runTypedProcess $ do
               readProcess_ pc
         action `shouldThrow` const @_ @ExitCodeException True
 
       it "readProcessStdout_" $ do
-        let pc = proc "/bin/env" ["false"]
+        let pc = proc "/usr/bin/env" ["false"]
             action = runEff . runTypedProcess $ do
               readProcessStdout_ pc
         action `shouldThrow` const @_ @ExitCodeException True
 
       it "readProcessStderr_" $ do
-        let pc = proc "/bin/env" ["false"]
+        let pc = proc "/usr/bin/env" ["false"]
             action = runEff . runTypedProcess $ do
               readProcessStderr_ pc
         action `shouldThrow` const @_ @ExitCodeException True

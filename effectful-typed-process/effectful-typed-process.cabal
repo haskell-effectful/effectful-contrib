@@ -42,7 +42,7 @@ library
                   , typed-process
                   , effectful-core
 
-test-suite effectful-cache-test
+test-suite effectful-typed-process-test
   import: language
 
   ghc-options:    -rtsopts -threaded -with-rtsopts=-N
