@@ -68,7 +68,7 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    Data.Time.Effect
+    Effectful.Time
   build-depends:
     base <= 4.17,
     time,

@@ -8,7 +8,7 @@ import Effectful.State.Local
 import Test.Hspec as H
 import qualified Utils as U
 
-import Data.Time.Effect
+import Effectful.Time
 
 main :: IO ()
 main = hspec spec

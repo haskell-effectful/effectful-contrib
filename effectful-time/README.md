@@ -20,7 +20,7 @@ processTime :: (Time :> es) => Eff es UTCTime
 import Data.Time (UTCTime)
 import qualified Data.Time as T
 
-import Data.Time.Effect (getCurrentTime)
+import Effectful.Time (getCurrentTime)
 
 usingTime :: (Time :> es) => Eff es UTCTime
 usingTime = do

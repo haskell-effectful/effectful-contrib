@@ -1,6 +1,6 @@
 {-# LANGUAGE Strict #-}
 {-|
-  Module      : Data.Time.Effect
+  Module      : Effectful.Time
   Copyright   : © Hécate Moonlight, 2021
   License     : MIT
   Maintainer  : hecate@glitchbra.in
@@ -8,7 +8,7 @@
 
   An effect wrapper around Data.Time for the Effectful ecosystem
 -}
-module Data.Time.Effect where
+module Effectful.Time where
 
 import Control.Monad.IO.Class
 import Data.Kind
