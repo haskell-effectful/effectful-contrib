@@ -55,7 +55,7 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    Data.Cache.Effect
+    Effectful.Cache
   build-depends:
     base <= 4.17,
     cache,
