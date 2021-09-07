@@ -1,8 +1,8 @@
 cabal-version:    3.0
 name:             effectful-cache
 version:          0.0.1.0
-homepage:         https://github.com/Kleidukos/effectful-cache#readme
-bug-reports:      https://github.com/Kleidukos/effectful-cache/issues
+homepage:         https://github.com/Kleidukos/effectful-contrib/tree/main/effectful-cache#readme
+bug-reports:      https://github.com/Kleidukos/effectful-contrib/issues
 author:           Hécate Moonlight
 maintainer:       Hécate Moonlight
 license:          MIT
