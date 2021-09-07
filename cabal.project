@@ -1,7 +1,14 @@
-packages: ./effectful-time
-          ./effectful-cache
+packages: ./effectful-cache
+          ./effectful-time
+          ./effectful-typed-process
 
 with-compiler: ghc-8.10
+
+source-repository-package
+  type: git
+  location: https://github.com/arybczak/effectful.git
+  tag: 7527aa4440ea22fe4bf14e44fa25a291c23ec46a
+  subdir: effectful
 
 source-repository-package
   type: git

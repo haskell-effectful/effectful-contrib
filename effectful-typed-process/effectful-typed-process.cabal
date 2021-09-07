@@ -1,0 +1,59 @@
+cabal-version:    3.0
+name:             effectful-typed-process
+version:          0.0.1.0
+homepage:         https://github.com/Kleidukos/effectful-contrib#readme
+bug-reports:      https://github.com/Kleidukos/effectful-contrib/issues
+author:           Dominik Peteler
+maintainer:       Dominik Peteler
+license:          BSD-3-Clause
+build-type:       Simple
+extra-source-files:
+    CHANGELOG.md
+    LICENSE.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common language
+  ghc-options: -Wall -Wcompat
+
+  default-language: Haskell2010
+
+  default-extensions:  DataKinds
+                       FlexibleContexts
+                       GADTs
+                       KindSignatures
+                       TypeOperators
+
+library
+  import: language
+
+  ghc-options: -O2 -rtsopts -threaded -with-rtsopts=-N
+
+  hs-source-dirs: src
+
+  exposed-modules:
+    Effectful.Process.Typed
+
+  build-depends:    base <= 4.17
+                  , bytestring
+                  , typed-process
+                  , effectful-core
+
+test-suite effectful-typed-process-test
+  import: language
+
+  ghc-options:    -rtsopts -threaded -with-rtsopts=-N
+
+  build-depends:    base
+                  , effectful
+                  , effectful-core
+                  , effectful-typed-process
+                  , hspec
+
+  hs-source-dirs: test
+
+  type:           exitcode-stdio-1.0
+  main-is:        Main.hs
