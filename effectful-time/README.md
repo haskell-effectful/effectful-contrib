@@ -20,7 +20,7 @@ processTime :: (Time :> es) => Eff es UTCTime
 import Data.Time (UTCTime)
 import qualified Data.Time as T
 
-import Data.Time.Effect (getCurrentTime)
+import Effectful.Time (getCurrentTime)
 
 usingTime :: (Time :> es) => Eff es UTCTime
 usingTime = do
@@ -39,4 +39,4 @@ runCurrentTimePure (time :: UTCTime) usingTime
 See the [tests][tests] to see an example use.
 
 [effectful]: https://github.com/arybczak/effectful
-[tests]: https://github.com/Kleidukos/effectful-time/blob/main/test/Main.hs
+[tests]: https://github.com/Kleidukos/effectful-contrib/blob/main/effectful-time/test/Main.hs

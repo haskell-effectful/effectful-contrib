@@ -1,8 +1,8 @@
 cabal-version:    3.0
 name:             effectful-time
 version:          0.0.1.0
-homepage:         https://github.com/Kleidukos/effectful-time#readme
-bug-reports:      https://github.com/Kleidukos/effectful-time/issues
+homepage:         https://github.com/Kleidukos/effectful-contrib/tree/main/effectful-time#readme
+bug-reports:      https://github.com/Kleidukos/effectful-contrib/issues
 author:           Hécate Moonlight
 maintainer:       Hécate Moonlight
 license:          MIT
@@ -14,7 +14,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/Kleidukos/effectful-time
+  location: https://github.com/Kleidukos/effectful-contrib
 
 common common-extensions
   default-extensions: ConstraintKinds
@@ -68,7 +68,7 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    Data.Time.Effect
+    Effectful.Time
   build-depends:
     base <= 4.17,
     time,

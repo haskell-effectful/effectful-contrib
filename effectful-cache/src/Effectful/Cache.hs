@@ -3,7 +3,7 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE Strict #-}
 {-|
-  Module      : Data.Cache.Effect
+  Module      : Effectful.Cache
   Copyright   : © Hécate Moonlight, 2021
   License     : MIT
   Maintainer  : hecate@glitchbra.in
@@ -11,7 +11,7 @@
 
   An effect wrapper around Data.Cache for the Effectful ecosystem
 -}
-module Data.Cache.Effect
+module Effectful.Cache
   ( -- * The /Cache/ effect
     Cache(..)
     -- * Handlers

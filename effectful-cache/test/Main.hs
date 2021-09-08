@@ -7,7 +7,7 @@ import Prelude hiding (lookup)
 import Test.Hspec as H
 import qualified Utils as U
 
-import Data.Cache.Effect
+import Effectful.Cache
 
 main :: IO ()
 main = hspec spec

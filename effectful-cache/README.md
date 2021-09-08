@@ -37,4 +37,4 @@ runCacheIO (cache :: Data.Cache Int Int)
 See the [tests][tests] to see an example use.
 
 [effectful]: https://github.com/arybczak/effectful
-[tests]: https://github.com/Kleidukos/effectful-cache/blob/main/test/Main.hs
+[tests]: https://github.com/Kleidukos/effectful-contrib/blob/main/effectful-cache/test/Main.hs
