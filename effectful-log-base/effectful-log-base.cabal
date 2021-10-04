@@ -1,0 +1,75 @@
+cabal-version:    3.0
+name:             effectful-log-base
+version:          0.0.1.0
+homepage:         https://github.com/Kleidukos/effectful-contrib#readme
+bug-reports:      https://github.com/Kleidukos/effectful-contrib/issues
+author:           Dominik Peteler
+maintainer:       Dominik Peteler
+license:          BSD-3-Clause
+build-type:       Simple
+extra-source-files:
+    CHANGELOG.md
+    LICENSE.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common language
+  ghc-options: -Wall -Wcompat
+
+  default-language: Haskell2010
+
+  default-extensions:  DataKinds
+                       FlexibleContexts
+                       GADTs
+                       KindSignatures
+                       TypeOperators
+
+library
+  import: language
+
+  ghc-options: -O2
+
+  hs-source-dirs: src
+
+  exposed-modules:
+    Effectful.Log
+    Effectful.Log.Logger
+    Effectful.Log.Backend.LogList
+    Effectful.Log.Backend.StandardOutput
+    Effectful.Log.Backend.StandardOutput.Bulk
+    Effectful.Log.Backend.Text
+
+  build-depends:    base <= 4.17
+                  , aeson
+                  , bytestring
+                  , effectful-core
+                  , log-base
+                  , text
+                  , time
+
+test-suite effectful-log-base-test
+  import: language
+
+  type:           exitcode-stdio-1.0
+
+  hs-source-dirs:
+    examples
+    test
+
+  main-is:        Main.hs
+
+  build-depends:    base
+                  , effectful
+                  , effectful-core
+                  , effectful-log-base
+                  , hspec
+                  , log-base
+                  , text
+
+  other-modules:
+    StdoutExample
+
+  ghc-options:    -rtsopts -threaded -with-rtsopts=-N
