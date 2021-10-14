@@ -54,12 +54,12 @@ runCryptoRNG rngState = interpret $ \_ -> \case
   RandomR (low, high) -> C.runCryptoRNGT rngState $ C.randomR (low, high)
 
 -- | Create a new 'CryptoRNGState', based on system entropy.
-newCryptoRNGState :: (MonadIO m) => m CryptoRNGState
+newCryptoRNGState :: IOE :> es => Eff es CryptoRNGState
 newCryptoRNGState = C.newCryptoRNGState
 
 -- | Create a new 'CryptoRNGState', based on a bytestring seed.
 -- Should only be used for testing.
-unsafeCryptoRNGState :: (MonadIO m) => ByteString -> m CryptoRNGState
+unsafeCryptoRNGState :: IOE :> es => ByteString -> Eff es CryptoRNGState
 unsafeCryptoRNGState seed = C.unsafeCryptoRNGState seed
 
 -- | Generate given number of cryptographically secure random bytes.
