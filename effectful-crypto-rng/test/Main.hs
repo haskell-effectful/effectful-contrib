@@ -6,7 +6,7 @@ import Effectful.Monad
 import Effectful.Reader
 import Test.Hspec as H
 
-import Effectful.Crypto.RNG
+import Effectful.Crypto.RNG.Dynamic
 
 main :: IO ()
 main = hspec spec

@@ -1,5 +1,5 @@
 {-|
-  Module      : Effectful.Crypto.RNG
+  Module      : Effectful.Crypto.RNG.Dynamic
   Copyright   : © Hécate Moonlight, 2021
   License     : MIT
   Maintainer  : hecate@glitchbra.in
@@ -7,7 +7,7 @@
 
   An effect wrapper around Crypto.RNG for the Effectful ecosystem
 -}
-module Effectful.Crypto.RNG
+module Effectful.Crypto.RNG.Dynamic
   (
   -- * CryptoRNG Effect
     CryptoRNG(..)
@@ -39,7 +39,7 @@ import qualified Crypto.RNG.Utils as C
 -- | An effect for the cryptographic random generator provided by the DRBG package.
 data CryptoRNG :: Effect where
   RandomBytes :: ByteLength -> CryptoRNG m ByteString
-  RandomString :: ByteLength -> [Char] -> CryptoRNG m String
+  RandomString :: ByteLength -> String -> CryptoRNG m String
   RandomR :: (Integral a) => (a, a) -> CryptoRNG m a
 
 -- | The default Effect handler
@@ -67,7 +67,7 @@ randomBytes :: (CryptoRNG :> es) => ByteLength -> Eff es ByteString
 randomBytes len = send $ RandomBytes len
 
 -- | Generate random string of specified length that contains allowed chars.
-randomString :: (CryptoRNG :> es) => Int -> [Char] -> Eff es String
+randomString :: (CryptoRNG :> es) => Int -> String -> Eff es String
 randomString len allowedChars = send $ RandomString len allowedChars
 
 -- | Generate a cryptographically secure random number in given,

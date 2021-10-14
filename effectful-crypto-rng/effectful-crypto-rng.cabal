@@ -70,7 +70,7 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    Effectful.Crypto.RNG
+    Effectful.Crypto.RNG.Dynamic
   build-depends:
     base <= 4.17,
     bytestring,
