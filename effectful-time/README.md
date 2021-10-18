@@ -10,6 +10,7 @@ This library exposes the following elements:
 
 * `Time` — The type-level effect that you can declare in your type signatures.
 
+example: 
 ```haskell
 processTime :: (Time :> es) => Eff es UTCTime
 ```
@@ -17,10 +18,9 @@ processTime :: (Time :> es) => Eff es UTCTime
 * `getCurrentTime` — The function that you will call to get a `Eff es UTCTime`.
 
 ```haskell
-import Data.Time (UTCTime)
 import qualified Data.Time as T
 
-import Effectful.Time (getCurrentTime)
+import Effectful.Time 
 
 usingTime :: (Time :> es) => Eff es UTCTime
 usingTime = do

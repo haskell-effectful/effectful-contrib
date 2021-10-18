@@ -1,4 +1,3 @@
-{-# LANGUAGE Strict #-}
 {-|
   Module      : Effectful.Time
   Copyright   : © Hécate Moonlight, 2021
@@ -8,7 +7,17 @@
 
   An effect wrapper around Data.Time for the Effectful ecosystem
 -}
-module Effectful.Time where
+module Effectful.Time
+  (
+  -- * Time Effect
+    Time(..)
+  , UTCTime
+  , getCurrentTime
+  -- * Runners
+  , runCurrentTimeIO
+  , runCurrentTimePure
+
+  ) where
 
 import Control.Monad.IO.Class
 import Data.Kind
