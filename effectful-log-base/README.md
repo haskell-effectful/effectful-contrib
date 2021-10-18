@@ -10,6 +10,18 @@ for the `Eff` monad.
 
 ## How to use
 
+This library provides the following modules:
+
+- `Effectful.Log`
+  This is module contains the core of the `effectful-log-base`. In particular,
+  the `Logging` effect and the functions associated with it are defined here.
+  Additionally, this module provides a `MonadLog` instance for the `Eff` monad.
+- `Effectful.Log.Backend.*`
+  The modules in this namespace provide lifted versions of the functions found
+  in the corresponding namespace of the `log-base` package.
+- `Effectful.Log.Logger`
+  This module contains functions which are useful if you want to implement
+  custom loggers.
 
 ```haskell
 {-# LANGUAGE OverloadedStrings #-}
