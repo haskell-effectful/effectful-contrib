@@ -63,6 +63,7 @@ test-suite effectful-log-base-test
   main-is:        Main.hs
 
   build-depends:    base
+                  , aeson
                   , effectful
                   , effectful-core
                   , effectful-log-base
@@ -73,5 +74,6 @@ test-suite effectful-log-base-test
 
   other-modules:
     StdoutExample
+    Utils
 
   ghc-options:    -rtsopts -threaded -with-rtsopts=-N
