@@ -46,7 +46,8 @@ library
                   , aeson
                   , bytestring
                   , effectful-core
-                  , log-base
+                  , effectful-time
+                  , log-base >= 0.11.0.0
                   , text
                   , time
 
@@ -65,6 +66,7 @@ test-suite effectful-log-base-test
                   , effectful
                   , effectful-core
                   , effectful-log-base
+                  , effectful-time
                   , hspec
                   , log-base
                   , text

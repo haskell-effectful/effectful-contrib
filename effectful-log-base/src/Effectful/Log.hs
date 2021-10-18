@@ -12,6 +12,7 @@ module Effectful.Log
   , Effectful.Log.logMessage
   , Effectful.Log.localData
   , Effectful.Log.localDomain
+  , Effectful.Log.localMaxLogLevel
   , Effectful.Log.getLoggerEnv
 
     -- * Effectful functions of 'LogBase.Monad'
@@ -21,9 +22,10 @@ module Effectful.Log
 
 import Data.Aeson.Types (Pair, Value)
 import Data.Text (Text)
+import Data.Time.Clock (UTCTime)
+import Effectful.Time (Time, getCurrentTime)
 import Log (Logger, LoggerEnv, LogLevel, MonadLog)
 import qualified Log as LogBase
-import Data.Time.Clock (UTCTime, getCurrentTime)
 
 import Effectful.Internal.Effect
 import Effectful.Internal.Env
@@ -42,14 +44,17 @@ runLogging
   -- ^ Application component name to use.
   -> Logger
   -- ^ The logging back-end to use.
+  -> LogLevel
+  -- ^ The maximum log level allowed to be logged.
   -> Eff (Logging : es) a
   -- ^ The computation to run.
   -> Eff es a
-runLogging component logger = runLoggingWithEnv LogBase.LoggerEnv
+runLogging component logger maxLogLevel = runLoggingWithEnv LogBase.LoggerEnv
   { LogBase.leLogger = logger
   , LogBase.leComponent = component
   , LogBase.leDomain = []
   , LogBase.leData = []
+  , LogBase.leMaxLogLevel = maxLogLevel
   }
 
 -- | Run a 'Logging' effect with a given logging environment.
@@ -66,11 +71,17 @@ runLoggingWithEnv logEnv = evalEffect (IdE (Logging logEnv))
 -- Effectful 'LogBase.MonadLog' methods
 
 -- | A specialized version of 'LogBase.logMessage'.
-logMessage :: Logging :> es => LogLevel -> Text -> Value -> Eff es ()
-logMessage level message data_ = unsafeEff $ \es -> do
-  IdE (Logging logEnv) <- getEnv es
+logMessage
+  :: (Logging :> es, Time :> es)
+  => LogLevel
+  -> Text
+  -> Value
+  -> Eff es ()
+logMessage level message data_ = do
   time <- getCurrentTime
-  LogBase.logMessageIO logEnv time level message data_
+  unsafeEff $ \es -> do
+    IdE (Logging logEnv) <- getEnv es
+    LogBase.logMessageIO logEnv time level message data_
 
 -- | A specialized version of 'LogBase.localData'.
 localData :: Logging :> es => [Pair] -> Eff es a -> Eff es a
@@ -82,6 +93,12 @@ localData data_ = localEffect $ \(IdE (Logging logEnv)) -> let
 localDomain :: Logging :> es => Text -> Eff es a -> Eff es a
 localDomain domain = localEffect $ \(IdE (Logging logEnv)) -> let
   logEnv' = logEnv { LogBase.leDomain = LogBase.leDomain logEnv ++ [domain] }
+  in IdE (Logging logEnv')
+
+-- | A specialized version of 'LogBase.localMaxLogLevel'.
+localMaxLogLevel :: Logging :> es => LogLevel -> Eff es a -> Eff es a
+localMaxLogLevel level = localEffect $ \(IdE (Logging logEnv)) -> let
+  logEnv' = logEnv { LogBase.leMaxLogLevel = level }
   in IdE (Logging logEnv')
 
 -- | A specialized version of 'LogBase.getLoggerEnv'.
@@ -105,11 +122,13 @@ getLoggerEff = logMessageEff <$> Effectful.Log.getLoggerEnv
 ----------------------------------------
 -- Orphan instances for 'Eff'
 
-instance Logging :> es => MonadLog (Eff es) where
+instance (Logging :> es, Time :> es) => MonadLog (Eff es) where
   logMessage = Effectful.Log.logMessage
 
   localData = Effectful.Log.localData
 
   localDomain = Effectful.Log.localDomain
+
+  localMaxLogLevel = Effectful.Log.localMaxLogLevel
 
   getLoggerEnv = Effectful.Log.getLoggerEnv
