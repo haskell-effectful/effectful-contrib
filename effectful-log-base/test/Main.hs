@@ -10,7 +10,7 @@ import Data.Aeson (Value(..))
 import Data.Text (Text)
 import Effectful.Monad
 import Effectful.Time
-import Log hiding (MonadLog(..))
+import Log
 import Test.Hspec hiding (shouldBe)
 
 import Effectful.Log

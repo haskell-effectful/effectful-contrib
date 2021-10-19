@@ -35,15 +35,6 @@ in `Effectful.Log`. Since log messages have a timestamp emitting those will
 incure a `Time :> es` constraint as well. Use one of the functions provided by
 the [`effectful-time`][effectful-time] package to handle that effect.
 
-Note that the `Effectful.Log` module exports some functions that clash with the
-methods of `MonadLog`. In order to use those functions import the modules like
-```haskell
-import Log hiding (MonadLog(..))
-import Effectful.Log
-```
-whereas if you want to use the methods of `MonadLog` import the `Effectful.Log`
-module qualified.
-
 Here is a full working example (also found in the `effectful-log-base/examples/`
 directory of this repository):
 ```haskell
