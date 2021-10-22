@@ -9,7 +9,9 @@ Andrzej Rybczak.
   [log-base library][log-base].
 * [effectful-log-elasticsearch](./effectful-log-elasticsearch): An ElasticSearch
   backend for [effectful-log-base](./effectful-log-base) based on the
-  [log-elasticsearch library][log-elasticsearch].
+* [effectful-log-postgres](./effectful-log-postgres): A PostgreSQL backend for
+  [effectful-log-base](./effectful-log-base) based on the
+  [log-postgres library][log-postgres].
 * [effectful-time](./effectful-time): A `Time` effect to use the
   [time library][time].
 * [effectful-typed-process](./effectful-typed-process): A `Process` effect based
@@ -35,5 +37,6 @@ $ cabal test all
 [cache]: https://hackage.haskell.org/package/cache
 [log-base]: https://hackage.haskell.org/package/log-base
 [log-elasticsearch]: https://hackage.haskell.org/package/log-elasticsearch
+[log-postgres]: https://hackage.haskell.org/package/log-postgres
 [time]: https://hackage.haskell.org/package/time
 [typed-process]: https://hackage.haskell.org/package/typed-process

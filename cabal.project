@@ -1,6 +1,7 @@
 packages: ./effectful-cache
           ./effectful-log-base
           ./effectful-log-elasticsearch
+          ./effectful-log-postgres
           ./effectful-time
           ./effectful-typed-process
           ./effectful-crypto-rng
