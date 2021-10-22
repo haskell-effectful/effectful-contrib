@@ -1,7 +1,10 @@
 -- | LogList logging back-end.
 module Effectful.Log.Backend.LogList
   ( -- * Logging to lists
-    newLogList
+    runLogListLogging
+
+    -- * Bindings
+  , newLogList
   , getLogList
   , putLogList
   , clearLogList
@@ -11,13 +14,35 @@ module Effectful.Log.Backend.LogList
   , LogBase.LogList
   ) where
 
+import Data.Text (Text)
 import Effectful.Internal.Monad
 import Effectful.Monad
-import Log.Data (LogMessage)
+import Log (LogLevel, LogMessage)
 import Log.Backend.LogList (LogList)
 import qualified Log.Backend.LogList as LogBase
 
+import Effectful.Log
 import Effectful.Log.Logger
+
+-- | A handler for the 'Logging' effect that is logging to a 'LogList'.
+--
+-- Implemented using 'LogBase.withLogListLogger'.
+runLogListLogging
+  :: IOE :> es
+  => LogList
+  -> Text
+  -- ^ Application component name to use.
+  -> LogLevel
+  -- ^ The maximum log level allowed to be logged.
+  -> Eff (Logging : es) a
+  -- ^ The computation to run.
+  -> Eff es a
+runLogListLogging ll component maxLogLevel k =
+  withLogListLogger ll $ \logger -> do
+    runLogging component logger maxLogLevel k
+
+----------------------------------------
+-- Bindings
 
 -- | Lifted 'LogBase.newLogList'.
 newLogList :: IOE :> es => Eff es LogList
