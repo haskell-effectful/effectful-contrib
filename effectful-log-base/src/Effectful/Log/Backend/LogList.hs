@@ -1,4 +1,4 @@
--- | LogList logging backed.
+-- | LogList logging back-end.
 module Effectful.Log.Backend.LogList
   ( -- * Logging to lists
     newLogList
