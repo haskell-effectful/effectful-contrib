@@ -70,6 +70,7 @@ library
   hs-source-dirs:
     src
   exposed-modules:
+    Effectful.Crypto.RNG
     Effectful.Crypto.RNG.Dynamic
   build-depends:
     base <= 4.17,
@@ -85,6 +86,8 @@ test-suite effectful-crypto-rng-test
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+    Dynamic
+    Static
     Utils
   hs-source-dirs:
       test
