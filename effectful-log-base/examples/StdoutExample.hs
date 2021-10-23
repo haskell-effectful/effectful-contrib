@@ -12,9 +12,8 @@ import Effectful.Log.Backend.StandardOutput
 
 main :: IO ()
 main = runEff $ do
-  withSimpleStdOutLogger $ \logger -> do
-    runCurrentTimeIO . runLogging "main" logger LogInfo $ do
-      app
+  runCurrentTimeIO . runSimpleStdOutLogging "main" LogInfo $ do
+    app
 
 app :: (Logging :> es, Time :> es) => Eff es ()
 app = do

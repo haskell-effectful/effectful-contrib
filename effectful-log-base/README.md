@@ -17,8 +17,9 @@ This library provides the following modules:
   `Logging` effect and the functions associated with it are defined here.
   Additionally, this module provides the `MonadLog` instance for the `Eff` monad.
 - `Effectful.Log.Backend.*`
-  The modules in this namespace provide lifted versions of the functions found
-  in the corresponding namespace of the `log-base` package.
+  The modules in this namespace provide handlers for the `Logging` effect for a
+  specific backend. They also include lifted versions of the functions found in
+  the corresponding namespace of the `log-base` package.
 - `Effectful.Log.Logger`
   This module contains functions which are useful if you want to implement
   custom loggers.
@@ -50,9 +51,8 @@ import Effectful.Log.Backend.StandardOutput
 
 main :: IO ()
 main = runEff $ do
-  withSimpleStdOutLogger $ \logger -> do
-    runCurrentTimeIO . runLogging "main" logger LogInfo $ do
-      app
+  runCurrentTimeIO . runSimpleStdOutLogging "main" LogInfo $ do
+    app
 
 app :: (Logging :> es, Time :> es) => Eff es ()
 app = do

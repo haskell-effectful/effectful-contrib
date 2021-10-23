@@ -21,7 +21,8 @@ common language
 
   default-language: Haskell2010
 
-  default-extensions:  FlexibleContexts
+  default-extensions:  DataKinds
+                       FlexibleContexts
                        TypeOperators
 
 library
@@ -36,6 +37,8 @@ library
 
   build-depends:    base <= 4.17
                   , effectful-core
+                  , effectful-log-base
                   , http-client
                   , log-base
                   , log-elasticsearch >= 0.10.0.0
+                  , text

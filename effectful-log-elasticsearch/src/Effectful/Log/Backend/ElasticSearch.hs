@@ -1,7 +1,10 @@
 -- | Elasticsearch logging back-end.
 module Effectful.Log.Backend.ElasticSearch
-  ( -- * Logging to lists
-    checkElasticSearchLogin
+  ( -- * Logging to an ElasticSearch endpoint
+    runElasticSearchLogging
+
+    -- * Bindings
+  , checkElasticSearchLogin
   , checkElasticSearchConnection
   , withElasticSearchLogger
 
@@ -17,12 +20,34 @@ module Effectful.Log.Backend.ElasticSearch
   , Log.esLoginInsecure
   ) where
 
+import Data.Text (Text)
 import Effectful.Internal.Monad
-import Log (Logger)
+import Effectful.Log (Logging, runLogging)
+import Effectful.Log.Logger (Logger)
 import Effectful.Monad
 import Log.Backend.ElasticSearch (ElasticSearchConfig)
 import qualified Log.Backend.ElasticSearch as Log
+import Log.Data (LogLevel)
 import Network.HTTP.Client (HttpException)
+
+-- | A handler for the 'Logging' effect using an ElasticSearch endpoint as a
+-- backend.
+runElasticSearchLogging
+  :: IOE :> es
+  => ElasticSearchConfig
+  -> Text
+  -- ^ Application component name to use.
+  -> LogLevel
+  -- ^ The maximum log level allowed to be logged.
+  -> Eff (Logging : es) a
+  -- ^ The computation to run.
+  -> Eff es a
+runElasticSearchLogging conf component maxLogLevel k =
+  withElasticSearchLogger conf $ \logger -> do
+    runLogging component logger maxLogLevel k
+
+----------------------------------------
+-- Bindings
 
 -- | Lifted 'Log.checkElasticSearchLogin'.
 checkElasticSearchLogin :: IOE :> es => ElasticSearchConfig -> Eff es ()
