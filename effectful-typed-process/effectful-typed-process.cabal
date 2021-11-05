@@ -30,7 +30,7 @@ common language
 library
   import: language
 
-  ghc-options: -O2 -rtsopts -threaded -with-rtsopts=-N
+  ghc-options: -rtsopts -threaded -with-rtsopts=-N
 
   hs-source-dirs: src
 
