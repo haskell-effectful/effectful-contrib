@@ -4,6 +4,7 @@ packages: ./effectful-cache
           ./effectful-time
           ./effectful-typed-process
           ./effectful-crypto-rng
+          ./effectful-co-log
 
 with-compiler: ghc-8.10
 
