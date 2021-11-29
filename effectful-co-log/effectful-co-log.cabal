@@ -1,38 +1,39 @@
 cabal-version:      3.0
 name:               effectful-co-log
 version:            0.1.0.0
-synopsis:
-
--- A longer description of the package.
--- description:
 homepage:           https://github.com/Kleidukos/effectful-contrib#readme
-
--- A URL where users can report bugs.
--- bug-reports:
-license:            NONE
+bug-reports:        https://github.com/Kleidukos/effectful-contrib/issues
 author:             Ambros Lins
 maintainer:         ambros.lins@gmail.com
+license:            MIT
+build-type:         Simple
 
--- A copyright notice.
--- copyright:
--- category:
-extra-source-files: CHANGELOG.md
+extra-source-files: 
+  CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common common
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+    -rtsopts
+    -threaded
+    -with-rtsopts=-N
 
 library
-    exposed-modules:  MyLib
-
-    -- Modules included in this library but not exported.
-    -- other-modules:
-
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
-    build-depends:    base ^>=4.14.3.0
-    hs-source-dirs:   src
-    default-language: Haskell2010
+  import: common
+  hs-source-dirs:   src
+  exposed-modules:  
+    MyLib
+  build-depends:    
+    base ^>=4.14.3.0
 
 test-suite effectful-co-log-test
-    default-language: Haskell2010
-    type:             exitcode-stdio-1.0
-    hs-source-dirs:   test
-    main-is:          MyLibTest.hs
-    build-depends:    base ^>=4.14.3.0
+  import: common
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          MyLibTest.hs
+  build-depends:    base ^>=4.14.3.0
