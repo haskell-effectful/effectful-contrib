@@ -55,18 +55,16 @@ import System.Process.Typed as Reexport hiding
   )
 
 import Data.ByteString.Lazy (ByteString)
-import System.Exit (ExitCode)
+import Effectful.Dispatch.Static
+import Effectful.Monad
 import qualified System.Process.Typed as PT
-
-import Effectful.Internal.Effect
-import Effectful.Internal.Monad
 
 -- | An effect for running child processes using the @typed-process@ library.
 data TypedProcess :: Effect where
   TypedProcess :: TypedProcess m r
 
 runTypedProcess :: IOE :> es => Eff (TypedProcess : es) a -> Eff es a
-runTypedProcess = evalEffect (IdE TypedProcess)
+runTypedProcess = evalData (DataA TypedProcess)
 
 ----------------------------------------
 -- Launch a process
@@ -217,5 +215,5 @@ liftWithProcess :: TypedProcess :> es
                 -> (PT.Process stdin stdout stderr -> Eff es a)
                 -> Eff es a
 liftWithProcess k pc f = unsafeEff $ \es ->
-  seqUnliftEff es $ \runInIO ->
+  seqUnliftIO es $ \runInIO ->
     k pc (runInIO . f)

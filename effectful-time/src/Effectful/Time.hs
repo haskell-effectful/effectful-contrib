@@ -22,7 +22,7 @@ module Effectful.Time
 import Control.Monad.IO.Class
 import Data.Kind
 import Data.Time (UTCTime)
-import Effectful.Handler
+import Effectful.Dispatch.Dynamic
 import Effectful.Monad
 import qualified Data.Time as T
 

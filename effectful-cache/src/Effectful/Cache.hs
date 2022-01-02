@@ -27,7 +27,7 @@ module Effectful.Cache
 import Control.Monad.IO.Class
 import Data.Hashable
 import Data.Kind
-import Effectful.Handler
+import Effectful.Dispatch.Dynamic
 import Effectful.Monad
 import Prelude hiding (lookup)
 import qualified Data.Cache as C
