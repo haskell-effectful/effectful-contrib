@@ -15,7 +15,7 @@ module Effectful.Log.Backend.LogList
   ) where
 
 import Data.Text (Text)
-import Effectful.Internal.Monad
+import Effectful.Dispatch.Static
 import Effectful.Monad
 import Log (LogLevel, LogMessage)
 import Log.Backend.LogList (LogList)

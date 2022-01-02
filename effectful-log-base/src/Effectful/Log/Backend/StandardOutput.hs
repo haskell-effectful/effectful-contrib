@@ -16,8 +16,8 @@ module Effectful.Log.Backend.StandardOutput
 import Data.Text (Text)
 import qualified Data.Text.IO as Text
 import Data.Aeson as JSON
+import Effectful.Dispatch.Static
 import Effectful.Monad
-import Effectful.Internal.Monad
 import Log (LogLevel)
 import qualified Log as LogBase
 import qualified Log.Backend.StandardOutput as LogBase

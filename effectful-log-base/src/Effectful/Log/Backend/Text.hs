@@ -9,7 +9,7 @@ module Effectful.Log.Backend.Text
   ) where
 
 import Data.Text (Text)
-import Effectful.Internal.Monad
+import Effectful.Dispatch.Static
 import Effectful.Monad
 import Log (LogLevel)
 import qualified Log.Backend.Text as LogBase

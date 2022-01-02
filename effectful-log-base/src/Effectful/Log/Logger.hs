@@ -16,8 +16,7 @@ import Data.Text (Text)
 import Log (Logger, LogMessage)
 import qualified Log as LogBase
 import qualified Log.Internal.Logger as LogBase
-import Effectful.Internal.Env
-import Effectful.Internal.Monad
+import Effectful.Dispatch.Static
 import Effectful.Monad
 
 -- | Lifted 'LogBase.mkLogger'.
