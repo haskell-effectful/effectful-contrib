@@ -21,7 +21,7 @@ module Effectful.Log.Backend.ElasticSearch
   ) where
 
 import Data.Text (Text)
-import Effectful.Internal.Monad
+import Effectful.Dispatch.Static
 import Effectful.Log (Logging, runLogging)
 import Effectful.Log.Logger (Logger)
 import Effectful.Monad

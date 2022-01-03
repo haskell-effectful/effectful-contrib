@@ -33,9 +33,8 @@ module Effectful.Crypto.RNG
 import Crypto.Classes (ByteLength)
 import Crypto.RNG (CryptoRNGState)
 import Data.ByteString (ByteString)
-import Effectful.Internal.Effect
-import Effectful.Internal.Env
-import Effectful.Internal.Monad
+import Effectful.Dispatch.Static
+import Effectful.Monad
 import qualified Crypto.RNG as C
 import qualified Crypto.RNG.Utils as C
 
@@ -49,7 +48,7 @@ runCryptoRNG
   => CryptoRNGState
   -> Eff (CryptoRNG : es) a
   -> Eff es a
-runCryptoRNG rngState = evalEffect (IdE (CryptoRNG rngState))
+runCryptoRNG rngState = evalData (DataA (CryptoRNG rngState))
 
 -- | Create a new 'CryptoRNGState', based on system entropy.
 newCryptoRNGState :: IOE :> es => Eff es CryptoRNGState
@@ -62,18 +61,18 @@ unsafeCryptoRNGState seed = C.unsafeCryptoRNGState seed
 
 -- | Generate given number of cryptographically secure random bytes.
 randomBytes :: CryptoRNG :> es => ByteLength -> Eff es ByteString
-randomBytes len = unsafeEff $ \es -> do
-  IdE (CryptoRNG rngState) <- getEnv es
-  C.randomBytesIO len rngState
+randomBytes len = do
+  DataA (CryptoRNG rngState) <- getData
+  unsafeEff_ $ C.randomBytesIO len rngState
 
 -- | Generate random string of specified length that contains allowed chars.
 randomString :: CryptoRNG :> es => Int -> String -> Eff es String
-randomString len allowedChars = unsafeEff $ \es -> do
-  IdE (CryptoRNG rngState) <- getEnv es
-  C.runCryptoRNGT rngState (C.randomString len allowedChars)
+randomString len allowedChars = do
+  DataA (CryptoRNG rngState) <- getData
+  unsafeEff_ $ C.runCryptoRNGT rngState (C.randomString len allowedChars)
 
 -- | Generate a cryptographically secure random number in given, closed range.
 randomR :: (CryptoRNG :> es, Integral a) => (a, a) -> Eff es a
-randomR (low, high) = unsafeEff $ \es -> do
-  IdE (CryptoRNG rngState) <- getEnv es
-  C.runCryptoRNGT rngState $ C.randomR (low, high)
+randomR (low, high) = do
+  DataA (CryptoRNG rngState) <- getData
+  unsafeEff_ $ C.runCryptoRNGT rngState $ C.randomR (low, high)

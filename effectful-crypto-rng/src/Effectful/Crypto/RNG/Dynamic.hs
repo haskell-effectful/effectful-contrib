@@ -31,7 +31,7 @@ import Crypto.Classes (ByteLength)
 import Crypto.RNG (CryptoRNGState)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
-import Effectful.Handler (interpret, send)
+import Effectful.Dispatch.Dynamic (interpret, send)
 import Effectful.Monad
 import qualified Crypto.RNG as C
 import qualified Crypto.RNG.Utils as C
