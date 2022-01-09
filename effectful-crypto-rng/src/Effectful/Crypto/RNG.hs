@@ -11,7 +11,7 @@
 -}
 module Effectful.Crypto.RNG
   ( -- * CryptoRNG Effect
-    CryptoRNG(..)
+    CryptoRNG
 
     -- * Runner
   , runCryptoRNG
@@ -39,8 +39,10 @@ import qualified Crypto.RNG as C
 import qualified Crypto.RNG.Utils as C
 
 -- | An effect for the cryptographic random generator provided by the DRBG package.
-data CryptoRNG :: Effect where
-  CryptoRNG :: CryptoRNGState -> CryptoRNG m a
+data CryptoRNG :: Effect
+
+type instance DispatchOf CryptoRNG = 'Static
+newtype instance StaticRep CryptoRNG = CryptoRNG CryptoRNGState
 
 -- | The default Effect handler
 runCryptoRNG
@@ -48,7 +50,7 @@ runCryptoRNG
   => CryptoRNGState
   -> Eff (CryptoRNG : es) a
   -> Eff es a
-runCryptoRNG rngState = evalData (DataA (CryptoRNG rngState))
+runCryptoRNG rngState = evalStaticRep (CryptoRNG rngState)
 
 -- | Create a new 'CryptoRNGState', based on system entropy.
 newCryptoRNGState :: IOE :> es => Eff es CryptoRNGState
@@ -62,17 +64,17 @@ unsafeCryptoRNGState seed = C.unsafeCryptoRNGState seed
 -- | Generate given number of cryptographically secure random bytes.
 randomBytes :: CryptoRNG :> es => ByteLength -> Eff es ByteString
 randomBytes len = do
-  DataA (CryptoRNG rngState) <- getData
+  CryptoRNG rngState <- getStaticRep
   unsafeEff_ $ C.randomBytesIO len rngState
 
 -- | Generate random string of specified length that contains allowed chars.
 randomString :: CryptoRNG :> es => Int -> String -> Eff es String
 randomString len allowedChars = do
-  DataA (CryptoRNG rngState) <- getData
+  CryptoRNG rngState <- getStaticRep
   unsafeEff_ $ C.runCryptoRNGT rngState (C.randomString len allowedChars)
 
 -- | Generate a cryptographically secure random number in given, closed range.
 randomR :: (CryptoRNG :> es, Integral a) => (a, a) -> Eff es a
 randomR (low, high) = do
-  DataA (CryptoRNG rngState) <- getData
+  CryptoRNG rngState <- getStaticRep
   unsafeEff_ $ C.runCryptoRNGT rngState $ C.randomR (low, high)

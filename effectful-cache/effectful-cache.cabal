@@ -25,6 +25,7 @@ common common-extensions
                       KindSignatures
                       ScopedTypeVariables
                       TypeApplications
+                      TypeFamilies
                       TypeOperators
   default-language: Haskell2010
 

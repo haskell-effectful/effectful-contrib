@@ -38,6 +38,7 @@ common common-extensions
                       ScopedTypeVariables
                       StandaloneDeriving
                       TypeApplications
+                      TypeFamilies
                       TypeOperators
   default-language: Haskell2010
 

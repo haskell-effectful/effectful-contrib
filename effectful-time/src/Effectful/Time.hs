@@ -30,6 +30,8 @@ import qualified Data.Time as T
 data Time :: Effect where
   CurrentTime :: Time m UTCTime
 
+type instance DispatchOf Time = 'Dynamic
+
 -- | Retrieve the current time in your effect stack
 getCurrentTime :: forall (es :: [Effect])
                 . Time :> es => Eff es UTCTime

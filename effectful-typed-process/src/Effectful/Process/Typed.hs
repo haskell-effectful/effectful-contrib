@@ -60,11 +60,13 @@ import Effectful.Monad
 import qualified System.Process.Typed as PT
 
 -- | An effect for running child processes using the @typed-process@ library.
-data TypedProcess :: Effect where
-  TypedProcess :: TypedProcess m r
+data TypedProcess :: Effect
+
+type instance DispatchOf TypedProcess = 'Static
+data instance StaticRep TypedProcess = TypedProcess
 
 runTypedProcess :: IOE :> es => Eff (TypedProcess : es) a -> Eff es a
-runTypedProcess = evalData (DataA TypedProcess)
+runTypedProcess = evalStaticRep TypedProcess
 
 ----------------------------------------
 -- Launch a process

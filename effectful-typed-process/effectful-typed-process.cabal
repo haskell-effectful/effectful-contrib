@@ -25,6 +25,7 @@ common language
                        FlexibleContexts
                        GADTs
                        KindSignatures
+                       TypeFamilies
                        TypeOperators
 
 library
