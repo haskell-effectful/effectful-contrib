@@ -43,6 +43,8 @@ data Cache k v :: Effect where
   Delete :: (Eq k, Hashable k) => k -> Cache k v m ()
   FilterWithKey :: (Eq k, Hashable k) => (k -> v -> Bool) -> Cache k v m ()
 
+type instance DispatchOf (Cache k v) = 'Dynamic
+
 -- | The default IO handler
 runCacheIO :: forall (k :: Type) (v :: Type) (es :: [Effect]) (a :: Type)
             . (Eq k, Hashable k, IOE :> es)

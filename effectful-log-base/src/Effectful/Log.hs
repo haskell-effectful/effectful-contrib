@@ -30,8 +30,10 @@ import Log (Logger, LoggerEnv, LogLevel, MonadLog)
 import qualified Log as LogBase
 
 -- | An effect for structured logging using the @log-base@ library.
-data Logging :: Effect where
-  Logging :: LoggerEnv -> Logging m r
+data Logging :: Effect
+
+type instance DispatchOf Logging = 'Static
+newtype instance StaticRep Logging = Logging LoggerEnv
 
 -- | Run a 'Logging' effect.
 --
@@ -63,7 +65,7 @@ runLoggingWithEnv
   -> Eff (Logging : es) a
   -- ^ The computation to run.
   -> Eff es a
-runLoggingWithEnv logEnv = evalData (DataA (Logging logEnv))
+runLoggingWithEnv logEnv = evalStaticRep (Logging logEnv)
 
 ----------------------------------------
 -- Effectful 'LogBase.MonadLog' methods
@@ -77,32 +79,28 @@ logMessageEff'
   -> Eff es ()
 logMessageEff' level message data_ = do
   time <- getCurrentTime
-  unsafeEff $ \es -> do
-    DataA (Logging logEnv) <- getEnv es
-    LogBase.logMessageIO logEnv time level message data_
+  Logging logEnv <- getStaticRep
+  unsafeEff_ $ LogBase.logMessageIO logEnv time level message data_
 
 -- | A specialized version of 'LogBase.localData'.
 localDataEff' :: Logging :> es => [Pair] -> Eff es a -> Eff es a
-localDataEff' data_ = localData $ \(DataA (Logging logEnv)) -> let
-  logEnv' = logEnv { LogBase.leData = data_ ++ LogBase.leData logEnv }
-  in DataA (Logging logEnv')
+localDataEff' data_ = localStaticRep $ \(Logging logEnv) ->
+  Logging logEnv { LogBase.leData = data_ ++ LogBase.leData logEnv }
 
 -- | A specialized version of 'LogBase.localDomain'.
 localDomainEff' :: Logging :> es => Text -> Eff es a -> Eff es a
-localDomainEff' domain = localData $ \(DataA (Logging logEnv)) -> let
-  logEnv' = logEnv { LogBase.leDomain = LogBase.leDomain logEnv ++ [domain] }
-  in DataA (Logging logEnv')
+localDomainEff' domain = localStaticRep $ \(Logging logEnv) ->
+  Logging logEnv { LogBase.leDomain = LogBase.leDomain logEnv ++ [domain] }
 
 -- | A specialized version of 'LogBase.localMaxLogLevel'.
 localMaxLogLevelEff' :: Logging :> es => LogLevel -> Eff es a -> Eff es a
-localMaxLogLevelEff' level = localData $ \(DataA (Logging logEnv)) -> let
-  logEnv' = logEnv { LogBase.leMaxLogLevel = level }
-  in DataA (Logging logEnv')
+localMaxLogLevelEff' level = localStaticRep $ \(Logging logEnv) ->
+  Logging logEnv { LogBase.leMaxLogLevel = level }
 
 -- | A specialized version of 'LogBase.getLoggerEnv'.
 getLoggerEnvEff' :: Logging :> es => Eff es LoggerEnv
 getLoggerEnvEff' = do
-  DataA (Logging env) <- getData
+  Logging env <- getStaticRep
   pure env
 
 ----------------------------------------

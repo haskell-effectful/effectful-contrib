@@ -42,6 +42,8 @@ data CryptoRNG :: Effect where
   RandomString :: ByteLength -> String -> CryptoRNG m String
   RandomR :: (Integral a) => (a, a) -> CryptoRNG m a
 
+type instance DispatchOf CryptoRNG = 'Dynamic
+
 -- | The default Effect handler
 runCryptoRNG :: forall (es :: [Effect]) (a :: Type)
                 . (IOE :> es)
