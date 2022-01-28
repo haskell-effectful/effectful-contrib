@@ -46,4 +46,8 @@ test-suite effectful-co-log-test
   import: common
   type:             exitcode-stdio-1.0
   hs-source-dirs:   test
-  main-is:          MyLibTest.hs
+  main-is:          Spec.hs
+  build-depends:
+    , effectful-co-log
+    , hspec ^>= 2.9.4
+    , QuickCheck ^>= 2.14.2
