@@ -25,6 +25,7 @@ common common
     , FlexibleContexts
     , KindSignatures
     , RankNTypes
+    , TypeApplications
     , TypeFamilies
     , TypeOperators
   build-depends:
@@ -51,3 +52,4 @@ test-suite effectful-co-log-test
     , effectful-co-log
     , hspec ^>= 2.9.4
     , QuickCheck ^>= 2.14.2
+    , silently ^>=1.2.5.2
