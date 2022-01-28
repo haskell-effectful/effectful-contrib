@@ -25,6 +25,7 @@ common common
     , FlexibleContexts
     , KindSignatures
     , RankNTypes
+    , ScopedTypeVariables
     , TypeApplications
     , TypeFamilies
     , TypeOperators
