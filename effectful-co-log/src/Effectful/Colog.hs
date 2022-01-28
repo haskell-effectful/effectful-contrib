@@ -124,7 +124,7 @@ type LogActionEff es msg = LogAction (Eff es) msg
 -- | Run a 'Log' effect.
 --
 -- This function is the effectful version of 'Colog.usingLoggerT'
-runLog :: LogActionEff es msg -> Eff (Log msg ': es) a -> Eff es a
+runLog :: forall msg a es. LogActionEff es msg -> Eff (Log msg ': es) a -> Eff es a
 runLog action m = do
   env <- unsafeEff forkEnv
   evalStaticRep (Log $ Colog.hoistLogAction (`unEff` env) action) m
@@ -132,17 +132,17 @@ runLog action m = do
 -- | Perform logging action with given @msg@.
 --
 -- The effectful version of 'Colog.logMsg'.
-logMsg :: Log msg :> es => msg -> Eff es ()
+logMsg :: forall msg es. Log msg :> es => msg -> Eff es ()
 logMsg msg = unsafeEff $ \env -> do
   Log (LogAction action) <- getEnv env
   action msg
 
 -- | The effectful version of 'Colog.logMsgs'.
-logMsgs :: (Foldable f, Log msg :> es) => f msg -> Eff es ()
+logMsgs :: forall msg f es. (Foldable f, Log msg :> es) => f msg -> Eff es ()
 logMsgs = traverse_ logMsg
 
 -- | The effectful version of 'Colog.withLog'.
-withLog :: Log msg :> es => (LogActionEff es msg -> LogActionEff es msg) -> Eff es a -> Eff es a
+withLog :: forall msg a es. Log msg :> es => (LogActionEff es msg -> LogActionEff es msg) -> Eff es a -> Eff es a
 withLog f m = do
   env <- unsafeEff forkEnv
   let f' = Colog.hoistLogAction (`unEff` env) . f . Colog.hoistLogAction unsafeEff_
@@ -235,5 +235,5 @@ richMessageAction = Colog.richMessageAction
 -- | LogAction that prints msg by appending it to the end of the sequence.
 --
 -- The effectful version of 'Colog.logMessagePure'.
-logMessagePure :: State (Seq msg) :> es => LogActionEff es msg
+logMessagePure :: forall msg es. State (Seq msg) :> es => LogActionEff es msg
 logMessagePure = LogAction $ \msg -> modify (|> msg)

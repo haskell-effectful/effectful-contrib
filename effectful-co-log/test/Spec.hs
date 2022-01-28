@@ -63,7 +63,7 @@ testWithLog :: Spec
 testWithLog = do
   prop "does nothing on id" $ \msgs ->
     runPureEff (runPureLogEff @String (withLog @String id $ logMsgs msgs))
-      === runPureEff (runPureLogEff (logMsgs @[] @String msgs))
+      === runPureEff (runPureLogEff (logMsgs @String @[] msgs))
   prop "does modify the LogAction" $ \msgs1 msgs2 ->
     let app = logMsgs msgs1 >> withLog @String (cmap reverse) (logMsgs msgs2)
      in snd (runPureEff (runPureLogEff @String app))
