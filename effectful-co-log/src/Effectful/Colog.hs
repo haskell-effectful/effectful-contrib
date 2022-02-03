@@ -97,6 +97,7 @@ import Effectful.Dispatch.Static
     unEff,
     unsafeEff,
     unsafeEff_,
+    unsafeUnliftIO,
   )
 import Effectful.Monad
   ( Dispatch (Static),
@@ -189,7 +190,7 @@ fmtSimpleRichMessageDefault :: IOE :> es => Colog.RichMsg (Eff es) SimpleMsg -> 
 fmtSimpleRichMessageDefault = Colog.fmtSimpleRichMessageDefault
 
 -- | The effectful version of 'Colog.upgradeMessageAction'
-upgradeMessageAction :: IOE :> es => Colog.FieldMap (Eff es) -> LogActionEff es (Colog.RichMsg (Eff es) msg) -> LogActionEff es msg
+upgradeMessageAction :: Colog.FieldMap (Eff es) -> LogActionEff es (Colog.RichMsg (Eff es) msg) -> LogActionEff es msg
 upgradeMessageAction = Colog.upgradeMessageAction
 
 -- | The effectful version of 'Colog.logByteStringStdout'.
@@ -205,8 +206,9 @@ logByteStringHandle :: IOE :> es => Handle -> LogActionEff es ByteString
 logByteStringHandle = Colog.logByteStringHandle
 
 -- | The effectful version of 'Colog.withLogByteStringFile'.
-withLogByteStringFile :: IOE :> es => FilePath -> (LogActionEff es ByteString -> IO r) -> Eff es r
-withLogByteStringFile path action = unsafeEff_ $ Colog.withLogByteStringFile path action
+withLogByteStringFile :: IOE :> es => FilePath -> (LogActionEff es ByteString -> Eff es r) -> Eff es r
+withLogByteStringFile path action = unsafeUnliftIO $ \runInIO ->
+  Colog.withLogByteStringFile path (runInIO . action)
 
 -- | The effectful version of 'Colog.logTextStdout'.
 logTextStdout :: IOE :> es => LogActionEff es Text
@@ -221,8 +223,9 @@ logTextHandle :: IOE :> es => Handle -> LogActionEff es Text
 logTextHandle = Colog.logTextHandle
 
 -- | The effectful version of 'Colog.withLogTextFile'.
-withLogTextFile :: IOE :> es => FilePath -> (LogActionEff es Text -> IO r) -> Eff es r
-withLogTextFile path action = unsafeEff_ $ Colog.withLogTextFile path action
+withLogTextFile :: IOE :> es => FilePath -> (LogActionEff es Text -> Eff es r) -> Eff es r
+withLogTextFile path action = unsafeUnliftIO $ \runInIO ->
+  Colog.withLogTextFile path (runInIO . action)
 
 -- | The effectful version of 'Colog.simpleMessageAction'.
 simpleMessageAction :: IOE :> es => LogActionEff es Message
