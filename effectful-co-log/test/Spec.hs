@@ -13,6 +13,7 @@ import System.IO.Silently
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck
+import Test.QuickCheck.Function
 import Test.QuickCheck.Monadic
 
 main :: IO ()
@@ -24,11 +25,12 @@ main = hspec $
 testRunLog :: Spec
 testRunLog = do
   prop "logs all pure messages" $ \msgs ->
-    snd (runPureEff (runPureLogEff @String (logMsgs msgs)))
-      === (msgs :: Seq String)
+    (runPureEff . execPureLogEff @String) (logMsgs msgs)
+      === msgs
   prop "logs all stdout messages" $ \msgs ->
     monadicIO $ do
-      stdout <- run $ capture_ $ runEff $ runLog logStringStdout (logMsgs msgs)
+      stdout <- run $ capture_ $
+        (runEff . runLog logStringStdout) (logMsgs msgs)
       pure $ stdout == unlines msgs
   prop "does not alter inner local state" $ \msgs1 msgs2 ->
     let app = do
@@ -37,7 +39,7 @@ testRunLog = do
           Local.modify @Int (+ 1)
           logMsgs msgs2
           Local.modify @Int (+ 1)
-     in runPureEff (runPureLogEff $ Local.execState @Int 0 app)
+     in (runPureEff . runPureLogEff . Local.execState @Int 0) app
           === (3, msgs1 <> msgs2 :: Seq String)
   prop "does not alter outer local state" $ \msgs1 msgs2 ->
     let app = do
@@ -46,7 +48,7 @@ testRunLog = do
           Local.modify @Int (+ 1)
           logMsgs msgs2
           Local.modify @Int (+ 1)
-     in runPureEff (Local.runState @Int 0 $ snd <$> runPureLogEff app)
+     in (runPureEff . Local.runState @Int 0 . execPureLogEff) app
           === (msgs1 <> msgs2 :: Seq String, 3)
   it "does work with 'Reader' effect" $
     let action = LogAction $ \msg -> do
@@ -55,19 +57,25 @@ testRunLog = do
         app = do
           logMsg "first"
           local (const "local: ") (logMsg "second")
-     in runPureEff
-          (runReader "reader: " $ Shared.execState Seq.empty $ runLog action app)
+     in (runPureEff .
+          runReader "reader: " . Shared.execState Seq.empty . runLog action) app
           `shouldBe` Seq.fromList ["reader: first", "local: second"]
 
 testWithLog :: Spec
 testWithLog = do
   prop "does nothing on id" $ \msgs ->
-    runPureEff (runPureLogEff @String (withLog @String id $ logMsgs msgs))
-      === runPureEff (runPureLogEff (logMsgs @String @[] msgs))
-  prop "does modify the LogAction" $ \msgs1 msgs2 ->
-    let app = logMsgs msgs1 >> withLog @String (cmap reverse) (logMsgs msgs2)
-     in snd (runPureEff (runPureLogEff @String app))
-          === msgs1 <> fmap reverse msgs2
+    let inner = logMsgs @String @[] msgs
+    in (runPureEff . runPureLogEff @String . withLog @String id) inner
+         === (runPureEff . runPureLogEff) inner
+  prop "does modify the LogAction" $ \msgs1 msgs2 f ->
+    let app = do
+          logMsgs msgs1
+          withLog @String (cmap (apply f)) (logMsgs msgs2)
+    in (runPureEff . execPureLogEff @String) app
+         === msgs1 <> fmap (apply f) msgs2
+
+execPureLogEff :: forall msg a es. Eff (Log msg ': Shared.State (Seq msg) ': es) a -> Eff es (Seq msg)
+execPureLogEff = Shared.execState Seq.empty . runLog (logMessagePure @msg)
 
 runPureLogEff :: forall msg a es. Eff (Log msg ': Shared.State (Seq msg) ': es) a -> Eff es (a, Seq msg)
 runPureLogEff = Shared.runState Seq.empty . runLog (logMessagePure @msg)
