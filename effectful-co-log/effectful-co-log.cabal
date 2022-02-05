@@ -64,3 +64,4 @@ test-suite effectful-co-log-test
     , effectful-co-log
     , hspec ^>= 2.9.4
     , QuickCheck ^>= 2.14.2
+    , filepath 
