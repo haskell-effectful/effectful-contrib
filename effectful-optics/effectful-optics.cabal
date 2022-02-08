@@ -1,0 +1,49 @@
+cabal-version:      3.6
+name:               effectful-optics
+version:            0.0.1.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+author:             brian
+maintainer:         littlebubu.shu@gmail.com
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files: CHANGELOG.md
+
+common common-options
+  default-language: Haskell2010
+  default-extensions:
+    FlexibleContexts,
+    TypeOperators,
+  ghc-options:
+    -Wall
+    -Wincomplete-record-updates
+    -Wredundant-constraints
+    -Werror=incomplete-patterns
+    -Werror=incomplete-uni-patterns
+    -Werror=missing-methods
+  build-depends:
+    base >= 4.12 && <5,
+    effectful-core,
+    optics-core ^>= 0.4,
+    optics-extra ^>= 0.4,
+
+library
+  import: common-options
+  hs-source-dirs: src
+  exposed-modules:
+    Effectful.Reader.Static.Optics
+    Effectful.State.Static.Local.Optics
+    Effectful.State.Static.Shared.Optics
+    Effectful.State.Dynamic.Optics
