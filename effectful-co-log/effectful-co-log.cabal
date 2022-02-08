@@ -1,0 +1,67 @@
+cabal-version:      3.0
+name:               effectful-co-log
+version:            0.1.0.0
+homepage:           https://github.com/Kleidukos/effectful-contrib#readme
+bug-reports:        https://github.com/Kleidukos/effectful-contrib/issues
+author:             Ambros Lins
+maintainer:         ambros.lins@gmail.com
+license:            MIT
+build-type:         Simple
+
+extra-source-files: 
+  CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common common
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+    -Wcompat
+  default-extensions:
+    , DataKinds
+    , FlexibleContexts
+    , KindSignatures
+    , RankNTypes
+    , ScopedTypeVariables
+    , TypeApplications
+    , TypeFamilies
+    , TypeOperators
+  build-depends:
+    , base >= 4.13 && <= 4.17
+    , effectful-core
+    , effectful
+    , effectful-co-log-core
+    , co-log ^>= 0.4.0.1
+    , co-log-core
+    , containers
+    , text
+    , bytestring
+    , chronos
+  
+  if impl(ghc < 8.10)
+    build-depends:
+      contiguous == 0.5.2
+
+library
+  import: common
+  hs-source-dirs:   src
+  exposed-modules:  
+    , Effectful.Colog
+    , Effectful.Colog.Actions
+    , Effectful.Colog.Concurrent
+    , Effectful.Colog.Message
+    , Effectful.Colog.Pure
+
+test-suite effectful-co-log-test
+  import: common
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  build-depends:
+    , effectful-co-log
+    , hspec ^>= 2.9.4
+    , QuickCheck ^>= 2.14.2
+    , filepath 

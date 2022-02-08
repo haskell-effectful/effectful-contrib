@@ -1,0 +1,54 @@
+cabal-version:      3.0
+name:               effectful-co-log-core
+version:            0.1.0.0
+homepage:           https://github.com/Kleidukos/effectful-contrib#readme
+bug-reports:        https://github.com/Kleidukos/effectful-contrib/issues
+author:             Ambros Lins
+maintainer:         ambros.lins@gmail.com
+license:            MIT
+build-type:         Simple
+
+extra-source-files: 
+  CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/Kleidukos/effectful-contrib
+
+common common
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+    -Wcompat
+  default-extensions:
+    , DataKinds
+    , FlexibleContexts
+    , KindSignatures
+    , RankNTypes
+    , ScopedTypeVariables
+    , TypeApplications
+    , TypeFamilies
+    , TypeOperators
+  build-depends:
+    , base >= 4.13 && <= 4.17
+    , effectful-core 
+    , co-log-core >= 0.2.1
+  
+library
+  import: common
+  hs-source-dirs:   src
+  exposed-modules:  
+    , Effectful.Colog.Core
+    , Effectful.Colog.Core.Effect
+    , Effectful.Colog.Core.IO
+
+test-suite effectful-co-log-core-test
+  import: common
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  build-depends:
+    , effectful-co-log-core
+    , hspec ^>= 2.9.4
+    , QuickCheck ^>= 2.14.2
+    , silently ^>=1.2.5.2
