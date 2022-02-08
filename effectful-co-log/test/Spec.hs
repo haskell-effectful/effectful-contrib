@@ -11,7 +11,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Effectful
 import Effectful.Colog
-import Effectful.Concurrent (runConcurrent)
+import Effectful.Concurrent (runConcurrent, threadDelay)
 import Effectful.Concurrent.Async (concurrently_, mapConcurrently_)
 import Effectful.FileSystem.IO
 import qualified Effectful.State.Shared as Shared
@@ -66,6 +66,7 @@ testConcurrent = do
               (logMessagePure @String)
               (`runLog` logMsgs @String msgs)
         pure $ logs === msgs
+
     prop "logs all messages concurrently" $ \msgs1 msgs2 ->
       ioProperty . runEff . runConcurrent $ do
         logs <-
@@ -99,6 +100,7 @@ testConcurrent = do
           logger <- forkBackgroundLogger defCapacity (logMessagePure @String)
           let action = convertToLogAction logger
           runLog action (logMsgs @String msgs)
+          killBackgroundLogger logger
         pure $ logs === msgs
 
     prop "logs all messages concurrently" $ \msgs1 msgs2 ->
@@ -110,6 +112,8 @@ testConcurrent = do
             concurrently_
               (logMsgs @(Either String String) $ map Left msgs1)
               (logMsgs @(Either String String) $ map Right msgs2)
+          threadDelay 10
+          killBackgroundLogger logger
         pure $ partitionEithers (toList logs) === (msgs1, msgs2)
 
   describe "mkBackgroundThread" $ do
@@ -119,6 +123,7 @@ testConcurrent = do
           logger <- mkBackgroundThread defCapacity
           let action = runInBackgroundThread logger (logMessagePure @String)
           runLog action (logMsgs @String msgs)
+          killBackgroundLogger logger
         pure $ logs === msgs
 
     prop "logs all messages concurrently" $ \msgs1 msgs2 ->
@@ -130,4 +135,6 @@ testConcurrent = do
             concurrently_
               (logMsgs @(Either String String) $ map Left msgs1)
               (logMsgs @(Either String String) $ map Right msgs2)
+          threadDelay 10
+          killBackgroundLogger logger
         pure $ partitionEithers (toList logs) === (msgs1, msgs2)
