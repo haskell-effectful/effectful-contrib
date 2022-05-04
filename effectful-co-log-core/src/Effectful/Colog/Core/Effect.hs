@@ -11,28 +11,28 @@ where
 import Colog.Core (LogAction (..))
 import qualified Colog.Core as Colog
 import Data.Foldable (traverse_)
+import Effectful (Dispatch (Static), DispatchOf, Effect, type (:>))
 import Effectful.Dispatch.Static
-  ( StaticRep,
+  ( SideEffects (NoSideEffects),
+    StaticRep,
     evalStaticRep,
-    forkEnv,
-    getEnv,
     localStaticRep,
     unEff,
     unsafeEff,
     unsafeEff_,
   )
-import Effectful.Monad
-  ( Dispatch (Static),
-    DispatchOf,
-    Eff,
-    Effect,
-    type (:>),
+import Effectful.Dispatch.Static.Primitive
+  ( forkEnv,
+    getEnv,
+  )
+import Effectful.Internal.Monad
+  ( Eff,
   )
 
 -- | An effect for composable, contravariant and comonadic logging using the @co-log@ library.
 data Log msg :: Effect
 
-type instance DispatchOf (Log msg) = 'Static
+type instance DispatchOf (Log msg) = 'Static 'NoSideEffects
 
 newtype instance StaticRep (Log msg) = Log (LogAction IO msg)
 

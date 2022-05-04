@@ -15,7 +15,7 @@ import Effectful.Colog.Core
     LogActionEff,
     runLog,
   )
-import qualified Effectful.State.Shared as Shared
+import qualified Effectful.State.Static.Shared as Shared
 
 -- | LogAction that prints msg by appending it to the end of the sequence.
 --

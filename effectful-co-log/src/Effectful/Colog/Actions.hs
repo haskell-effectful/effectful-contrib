@@ -24,7 +24,7 @@ import Data.ByteString (ByteString)
 import Data.Text (Text)
 import Effectful (Eff, IOE, type (:>))
 import Effectful.Colog.Core (LogActionEff)
-import Effectful.Dispatch.Static (unsafeUnliftIO)
+import Effectful.Dispatch.Static.Unsafe (reallyUnsafeUnliftIO)
 import System.IO (Handle)
 
 -- | The effectful version of 'Colog.logByteStringStdout'.
@@ -41,7 +41,7 @@ logByteStringHandle = Colog.logByteStringHandle
 
 -- | The effectful version of 'Colog.withLogByteStringFile'.
 withLogByteStringFile :: IOE :> es => FilePath -> (LogActionEff es ByteString -> Eff es r) -> Eff es r
-withLogByteStringFile path action = unsafeUnliftIO $ \runInIO ->
+withLogByteStringFile path action = reallyUnsafeUnliftIO $ \runInIO ->
   Colog.withLogByteStringFile path (runInIO . action)
 
 -- | The effectful version of 'Colog.logTextStdout'.
@@ -58,7 +58,7 @@ logTextHandle = Colog.logTextHandle
 
 -- | The effectful version of 'Colog.withLogTextFile'.
 withLogTextFile :: IOE :> es => FilePath -> (LogActionEff es Text -> Eff es r) -> Eff es r
-withLogTextFile path action = unsafeUnliftIO $ \runInIO ->
+withLogTextFile path action = reallyUnsafeUnliftIO $ \runInIO ->
   Colog.withLogTextFile path (runInIO . action)
 
 -- | The effectful version of 'Colog.simpleMessageAction'.

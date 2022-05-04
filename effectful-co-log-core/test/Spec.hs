@@ -3,8 +3,8 @@ module Main where
 import Data.Bifunctor (second)
 import Effectful
 import Effectful.Colog.Core
-import Effectful.Reader (ask, local, runReader)
-import qualified Effectful.State.Local as Local
+import Effectful.Reader.Static (ask, local, runReader)
+import qualified Effectful.State.Static.Local as Local
 import System.IO.Silently (capture_)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)

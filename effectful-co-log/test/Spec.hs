@@ -14,7 +14,7 @@ import Effectful.Colog
 import Effectful.Concurrent (runConcurrent, threadDelay)
 import Effectful.Concurrent.Async (concurrently_, mapConcurrently_)
 import Effectful.FileSystem.IO
-import qualified Effectful.State.Shared as Shared
+import qualified Effectful.State.Static.Shared as Shared
 import Effectful.Temporary
 import System.FilePath
 import Test.Hspec

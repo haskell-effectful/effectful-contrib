@@ -19,9 +19,9 @@ where
 
 import qualified Colog.Core as Colog
 import Colog.Core.Action (LogAction)
+import Effectful (Eff, IOE, type (:>))
 import Effectful.Colog.Core.Effect (LogActionEff)
-import Effectful.Dispatch.Static (unsafeUnliftIO)
-import Effectful.Monad (Eff, IOE, type (:>))
+import Effectful.Dispatch.Static.Unsafe (reallyUnsafeUnliftIO)
 import System.IO (Handle)
 
 -- | The effectul version of 'Colog.logStringStdout'
@@ -38,7 +38,7 @@ logStringHandle = Colog.logStringHandle
 
 -- | The effectul version of 'Colog.withLogStringFile'
 withLogStringFile :: IOE :> es => FilePath -> (LogActionEff es String -> Eff es r) -> Eff es r
-withLogStringFile path action = unsafeUnliftIO $ \runInIO ->
+withLogStringFile path action = reallyUnsafeUnliftIO $ \runInIO ->
   Colog.withLogStringFile path (runInIO . action)
 
 -- | The effectul version of 'Colog.logPrint'
@@ -55,7 +55,7 @@ logPrintHandle = Colog.logPrintHandle
 
 -- | The effectul version of 'Colog.withLogPrintFile'
 withLogPrintFile :: forall msg r es. (Show msg, IOE :> es) => FilePath -> (LogActionEff es msg -> Eff es r) -> Eff es r
-withLogPrintFile path action = unsafeUnliftIO $ \runInIO ->
+withLogPrintFile path action = reallyUnsafeUnliftIO $ \runInIO ->
   Colog.withLogPrintFile path (runInIO . action)
 
 -- | The effectul version of 'Colog.liftLogIO'
