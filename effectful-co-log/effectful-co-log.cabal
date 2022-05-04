@@ -51,7 +51,6 @@ library
   exposed-modules:  
     , Effectful.Colog
     , Effectful.Colog.Actions
-    , Effectful.Colog.Concurrent
     , Effectful.Colog.Message
     , Effectful.Colog.Pure
 
