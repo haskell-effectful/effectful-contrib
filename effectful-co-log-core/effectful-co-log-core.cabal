@@ -1,12 +1,17 @@
 cabal-version:      3.0
 name:               effectful-co-log-core
 version:            0.1.0.0
+category:           Logging, Effectful
 homepage:           https://github.com/Kleidukos/effectful-contrib#readme
 bug-reports:        https://github.com/Kleidukos/effectful-contrib/issues
 author:             Ambros Lins
 maintainer:         ambros.lins@gmail.com
 license:            MIT
 build-type:         Simple
+synopsis:           Composable Contravariant Comonadic Effectful Logging Library
+
+description:
+  [co-log-core](http://hackage.haskell.org/package/co-log-core) bindings for the [effectful](https://github.com/haskell-effectful/effectful) ecosystem.
 
 extra-source-files: 
   CHANGELOG.md
@@ -31,13 +36,13 @@ common common
     , TypeOperators
   build-depends:
     , base >= 4.13 && <= 4.17
-    , effectful-core 
+    , effectful-core
     , co-log-core >= 0.2.1
   
 library
   import: common
   hs-source-dirs:   src
-  exposed-modules:  
+  exposed-modules:
     , Effectful.Colog.Core
     , Effectful.Colog.Core.Effect
     , Effectful.Colog.Core.IO

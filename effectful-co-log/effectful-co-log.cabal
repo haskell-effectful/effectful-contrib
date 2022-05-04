@@ -1,14 +1,19 @@
 cabal-version:      3.0
 name:               effectful-co-log
 version:            0.1.0.0
+category:           Logging, Effectful
 homepage:           https://github.com/Kleidukos/effectful-contrib#readme
 bug-reports:        https://github.com/Kleidukos/effectful-contrib/issues
 author:             Ambros Lins
 maintainer:         ambros.lins@gmail.com
 license:            MIT
 build-type:         Simple
+synopsis:           Composable Contravariant Comonadic Effectful Logging Library
 
-extra-source-files: 
+description:
+  [co-log](http://hackage.haskell.org/package/co-log) bindings for the [effectful](https://github.com/haskell-effectful/effectful) ecosystem.
+
+extra-source-files:
   CHANGELOG.md
 
 source-repository head
@@ -48,7 +53,7 @@ common common
 library
   import: common
   hs-source-dirs:   src
-  exposed-modules:  
+  exposed-modules:
     , Effectful.Colog
     , Effectful.Colog.Actions
     , Effectful.Colog.Message
@@ -63,4 +68,4 @@ test-suite effectful-co-log-test
     , effectful-co-log
     , hspec ^>= 2.9.4
     , QuickCheck ^>= 2.14.2
-    , filepath 
+    , filepath
