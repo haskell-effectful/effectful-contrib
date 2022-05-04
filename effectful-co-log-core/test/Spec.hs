@@ -1,14 +1,24 @@
 module Main where
 
 import Data.Bifunctor (second)
-import Effectful
+import Effectful (Eff, runEff, runPureEff, type (:>))
 import Effectful.Colog.Core
+  ( Log,
+    LogAction (..),
+    LogActionEff,
+    cmap,
+    logMsg,
+    logMsgs,
+    logStringStdout,
+    runLog,
+    withLog,
+  )
 import Effectful.Reader.Static (ask, local, runReader)
 import qualified Effectful.State.Static.Local as Local
 import System.IO.Silently (capture_)
-import Test.Hspec
+import Test.Hspec (Spec, describe, hspec, it, shouldBe)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck
+import Test.QuickCheck (idempotentIOProperty, (===))
 import Test.QuickCheck.Function (apply)
 
 main :: IO ()

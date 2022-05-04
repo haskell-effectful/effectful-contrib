@@ -6,12 +6,32 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Effectful (MonadIO (liftIO), runEff)
 import Effectful.Colog
+  ( logMsgs,
+    logTextHandle,
+    runLog,
+    withLogTextFile,
+  )
 import Effectful.FileSystem.IO
+  ( IOMode (WriteMode),
+    runFileSystem,
+    withFile,
+  )
 import Effectful.Temporary
-import System.FilePath
-import Test.Hspec
+  ( runTemporary,
+    withSystemTempDirectory,
+  )
+import System.FilePath ((</>))
+import Test.Hspec (Spec, describe, hspec)
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck
+  ( Gen,
+    arbitraryASCIIChar,
+    forAll,
+    ioProperty,
+    listOf,
+    suchThat,
+    (===),
+  )
 
 main :: IO ()
 main = hspec $ do

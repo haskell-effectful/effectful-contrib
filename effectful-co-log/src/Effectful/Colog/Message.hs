@@ -62,6 +62,11 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Effectful (Eff, IOE, type (:>))
 import Effectful.Colog.Core
+  ( Log,
+    LogActionEff,
+    Severity (..),
+    logMsg,
+  )
 import GHC.Stack (callStack, withFrozenCallStack)
 import Prelude hiding (log)
 
